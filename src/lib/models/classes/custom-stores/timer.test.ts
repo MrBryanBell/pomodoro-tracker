@@ -32,6 +32,7 @@ describe('Timer', () => {
 
 	it('should return a formatted string (mm:ss) showing the time left', () => {
 		const timeLeftInMinutes = get(timer.timeLeftInMinutes$);
+		expect(typeof timeLeftInMinutes).toBe('string');
 		expect(timeLeftInMinutes).toBe('25:00');
 	});
 
