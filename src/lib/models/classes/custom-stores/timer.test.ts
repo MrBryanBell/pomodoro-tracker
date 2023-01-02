@@ -131,4 +131,16 @@ describe('Timer', () => {
 
 		expect(timeLeftInMinutes).toBe('25:00');
 	});
+
+	it('should have "20" as duration after setting duration to 20', () => {
+		// set duration to 20 minutes
+		timer.setDurationInMinutes(20);
+		let durationInMinutes = get(timer.durationInMinutes$);
+		expect(durationInMinutes).toBe(20);
+
+		// set duration to 15 minutes
+		timer.setDurationInMinutes(15);
+		durationInMinutes = get(timer.durationInMinutes$);
+		expect(durationInMinutes).toBe(15);
+	});
 });

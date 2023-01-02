@@ -106,4 +106,13 @@ export class Timer {
 			return timer;
 		});
 	}
+
+	setDurationInMinutes(duration: number) {
+		this.update((timer) => {
+			timer.durationInMinutes = duration;
+			timer.timeLeftInSeconds = duration * 60;
+
+			return timer;
+		});
+	}
 }
