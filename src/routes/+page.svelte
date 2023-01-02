@@ -6,3 +6,5 @@
 
 <h1>{$timeLeftInMinutes}</h1>
 <button on:click={() => timer.start()}>start</button>
+<button on:click={() => timer.pause()}>pause</button>
+<button on:click={() => timer.restart()}>restart</button>

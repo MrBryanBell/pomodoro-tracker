@@ -113,4 +113,22 @@ describe('Timer', () => {
 		isPaused = get(timer.isPaused$);
 		expect(isPaused).toBe(true);
 	});
+
+	it('should have "25:00" as time left after restarting', () => {
+		vi.useFakeTimers();
+
+		// Advance the timer by 30 seconds
+		timer.start();
+		vi.advanceTimersByTime(120000);
+		let timeLeftInMinutes = get(timer.timeLeftInMinutes$);
+		timer.pause();
+
+		expect(timeLeftInMinutes).toBe('23:00');
+
+		timer.restart();
+
+		timeLeftInMinutes = get(timer.timeLeftInMinutes$);
+
+		expect(timeLeftInMinutes).toBe('25:00');
+	});
 });

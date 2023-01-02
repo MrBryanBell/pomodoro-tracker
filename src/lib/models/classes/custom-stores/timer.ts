@@ -98,4 +98,12 @@ export class Timer {
 			}
 		}, 1000);
 	}
+
+	restart() {
+		this.update((timer) => {
+			timer.timeLeftInSeconds = timer.durationInMinutes * 60;
+
+			return timer;
+		});
+	}
 }
