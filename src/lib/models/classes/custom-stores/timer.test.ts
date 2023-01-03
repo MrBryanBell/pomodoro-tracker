@@ -1,3 +1,4 @@
+// import { type DateObjectUnits, DateTime } from 'luxon';
 import { get } from 'svelte/store';
 import { vi } from 'vitest';
 
@@ -16,131 +17,149 @@ describe('Timer', () => {
 		expect(timer).toBeInstanceOf(Timer);
 	});
 
-	it('should have a property named "isPaused" with a boolean value ', () => {
-		const isPaused = get(timer.isPaused$);
-		expect(typeof isPaused).toBe('boolean');
+	describe('isPaused$ property', () => {
+		it('should be a boolean value ', () => {
+			const isPaused = get(timer.isPaused$);
+			expect(typeof isPaused).toBe('boolean');
+		});
+
+		it('should be true by default', () => {
+			expect(get(timer.isPaused$)).toBe(true);
+		});
 	});
 
-	it('should be paused by default', () => {
-		expect(get(timer.isPaused$)).toBe(true);
+	describe('durationInMinutes$ property', () => {
+		it('should have a duration of 25 minutes', () => {
+			const durationInMinutes = get(timer.durationInMinutes$);
+			expect(durationInMinutes).toBe(25);
+		});
 	});
 
-	it('should have a duration of 25 minutes', () => {
-		const durationInMinutes = get(timer.durationInMinutes$);
-		expect(durationInMinutes).toBe(25);
+	describe('timeLeftInMinutes$ property', () => {
+		it('should be a string', () => {
+			const timeLeftInMinutes = get(timer.timeLeftInMinutes$);
+			expect(typeof timeLeftInMinutes).toBe('string');
+		});
+
+		it('should return a formatted string (mm:ss) showing the time left', () => {
+			const timeLeftInMinutes = get(timer.timeLeftInMinutes$);
+			expect(timeLeftInMinutes).toBe('25:00');
+		});
+
+		it('should return "24:30" after 30 seconds of being started', () => {
+			vi.useFakeTimers();
+			let timeLeftInMinutes: string | undefined = undefined;
+			const unsubscribe = timer.timeLeftInMinutes$.subscribe((value) => {
+				timeLeftInMinutes = value;
+			});
+
+			// Start the timer
+			timer.start();
+
+			// Advance 30 seconds (virtual time)
+			vi.advanceTimersByTime(30000);
+			expect(timeLeftInMinutes).toBe('24:30');
+
+			// Advance 30 seconds more (virtual time)
+			vi.advanceTimersByTime(30000);
+			expect(timeLeftInMinutes).toBe('24:00');
+
+			unsubscribe();
+		});
 	});
 
-	it('should return a formatted string (mm:ss) showing the time left', () => {
-		const timeLeftInMinutes = get(timer.timeLeftInMinutes$);
-		expect(typeof timeLeftInMinutes).toBe('string');
-		expect(timeLeftInMinutes).toBe('25:00');
+	describe('start() method', () => {
+		it('should set isPaused$ to false', () => {
+			timer.start();
+			const isPaused = get(timer.isPaused$);
+
+			expect(isPaused).toBe(false);
+		});
 	});
 
-	it('should have "24:30" as timeLeft after 30 seconds of being started', () => {
-		vi.useFakeTimers();
+	describe('pause() method', () => {
+		it('should have the same timeLeftInMinutes$ value after invoking', () => {
+			vi.useFakeTimers();
+			let timeLeftInMinutes: string | undefined = undefined;
+			const unsubscribe = timer.timeLeftInMinutes$.subscribe((value) => {
+				timeLeftInMinutes = value;
+			});
+			const expectedResult = '24:30';
 
-		timer.start();
+			// Start timer and advance virtual-time by 30 seconds
+			timer.start();
+			vi.advanceTimersByTime(30000);
+			expect(timeLeftInMinutes).toBe(expectedResult);
 
-		// Advance the timer by 30 seconds
-		vi.advanceTimersByTime(30000);
-		let timeLeftInMinutes = get(timer.timeLeftInMinutes$);
+			// Pause timer and advance virtual-time by 30 seconds
+			timer.pause();
+			vi.advanceTimersByTime(30000);
+			// timeLeftInMinutes should still be '24:30'
+			expect(timeLeftInMinutes).toBe(expectedResult);
 
-		expect(timeLeftInMinutes).toBe('24:30');
+			unsubscribe();
+		});
 
-		// Advance the timer by 30 seconds
-		vi.advanceTimersByTime(30000);
-		timeLeftInMinutes = get(timer.timeLeftInMinutes$);
+		it('should set isPaused$ to true after invoking', () => {
+			let isPaused: boolean | undefined = undefined;
+			const unsubscribe = timer.isPaused$.subscribe((value) => {
+				isPaused = value;
+			});
 
-		expect(timeLeftInMinutes).toBe('24:00');
-	});
+			// Start timer and pause it
+			timer.start();
+			timer.pause();
 
-	it('should pause countdown after pausing the timer', () => {
-		vi.useFakeTimers();
-		let timeLeftInMinutes = get(timer.timeLeftInMinutes$);
-		expect(timeLeftInMinutes).toBe('25:00');
-
-		timer.start();
-
-		// Advance the timer by 30 seconds
-		vi.advanceTimersByTime(30000);
-		timeLeftInMinutes = get(timer.timeLeftInMinutes$);
-
-		expect(timeLeftInMinutes).toBe('24:30');
-
-		timer.pause();
-
-		// Advance the timer by 30 seconds
-		vi.advanceTimersByTime(30000);
-		timeLeftInMinutes = get(timer.timeLeftInMinutes$);
-
-		// The timer should not have advanced
-		expect(timeLeftInMinutes).toBe('24:30');
-	});
-
-	it('should have "isPaused: false" after starting the timer', () => {
-		let isPaused = get(timer.isPaused$);
-		expect(isPaused).toBe(true);
-
-		timer.start();
-		isPaused = get(timer.isPaused$);
-		expect(isPaused).toBe(false);
-	});
-
-	it('should have "isPaused: true" after pausing the timer', () => {
-		let isPaused = get(timer.isPaused$);
-		expect(isPaused).toBe(true);
-
-		timer.start();
-		isPaused = get(timer.isPaused$);
-		expect(isPaused).toBe(false);
-
-		timer.pause();
-		isPaused = get(timer.isPaused$);
-		expect(isPaused).toBe(true);
+			expect(isPaused).toBe(true);
+			unsubscribe();
+		});
 	});
 
 	it('should have "isPaused: true" after the timer ends', () => {
-		let isPaused = get(timer.isPaused$);
+		vi.useFakeTimers();
+		let isPaused: boolean | undefined = undefined;
+		const unsubscribe = timer.isPaused$.subscribe((value) => {
+			isPaused = value;
+		});
 		const minutes = 25;
 		const milliseconds = minutes * 60 * 1000;
 
-		vi.useFakeTimers();
 		timer.start();
-		isPaused = get(timer.isPaused$);
 		expect(isPaused).toBe(false);
 
 		vi.advanceTimersByTime(milliseconds);
-		isPaused = get(timer.isPaused$);
 		expect(isPaused).toBe(true);
+		unsubscribe();
 	});
 
-	it('should have "25:00" as time left after restarting', () => {
-		vi.useFakeTimers();
+	describe('restart() method', () => {
+		it('should set time left to "25:00" after invoking', () => {
+			vi.useFakeTimers();
+			const seconds = 30;
+			let timeLeftInMinutes: string | undefined = undefined;
+			const unsubscribe = timer.timeLeftInMinutes$.subscribe((value) => {
+				timeLeftInMinutes = value;
+			});
 
-		// Advance the timer by 30 seconds
-		timer.start();
-		vi.advanceTimersByTime(120000);
-		let timeLeftInMinutes = get(timer.timeLeftInMinutes$);
-		timer.pause();
+			// Start timer and advance virtual-time by 30 seconds
+			timer.start();
+			vi.advanceTimersByTime(seconds * 1000);
+			timer.pause();
+			expect(timeLeftInMinutes).toBe('24:30');
 
-		expect(timeLeftInMinutes).toBe('23:00');
+			// Restart timer
+			timer.restart();
+			expect(timeLeftInMinutes).toBe('25:00');
 
-		timer.restart();
-
-		timeLeftInMinutes = get(timer.timeLeftInMinutes$);
-
-		expect(timeLeftInMinutes).toBe('25:00');
+			unsubscribe();
+		});
 	});
 
-	it('should have "20" as duration after setting duration to 20', () => {
-		// set duration to 20 minutes
-		timer.setDurationInMinutes(20);
-		let durationInMinutes = get(timer.durationInMinutes$);
-		expect(durationInMinutes).toBe(20);
-
-		// set duration to 15 minutes
-		timer.setDurationInMinutes(15);
-		durationInMinutes = get(timer.durationInMinutes$);
-		expect(durationInMinutes).toBe(15);
+	describe('setDurationInMinutes() method', () => {
+		it('should have "20" as duration after invoking', () => {
+			timer.setDurationInMinutes(20);
+			const durationInMinutes = get(timer.durationInMinutes$);
+			expect(durationInMinutes).toBe(20);
+		});
 	});
 });

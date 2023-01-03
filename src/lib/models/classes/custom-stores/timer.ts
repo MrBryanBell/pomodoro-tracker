@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/member-ordering */
+import { DateTime } from 'luxon';
 import { derived, get, writable } from 'svelte/store';
 
 export interface TimerSettings {
@@ -7,7 +8,7 @@ export interface TimerSettings {
 
 interface TimerState {
 	durationInMinutes: number;
-	startedTime: string;
+	startedTime: DateTime;
 	timeLeftInSeconds: number;
 	isPaused: boolean;
 }
@@ -21,7 +22,7 @@ export class Timer {
 	constructor({ durationInMinutes }: TimerSettings) {
 		const init: TimerState = {
 			durationInMinutes,
-			startedTime: new Date().toISOString(),
+			startedTime: DateTime.now(),
 			timeLeftInSeconds: durationInMinutes * 60,
 			isPaused: true
 		};
@@ -41,14 +42,31 @@ export class Timer {
 
 	get timeLeftInMinutes$() {
 		return derived(this, (timer) => {
-			const timeLeftInISO = new Date(timer.timeLeftInSeconds * 1000).toISOString();
+			const timeLeftInMs = DateTime.fromMillis(timer.timeLeftInSeconds * 1000);
 
-			return timeLeftInISO.slice(14, 19);
+			return timeLeftInMs.toFormat('mm:ss');
+		});
+	}
+
+	private decreaseTimeLeft() {
+		this.update((timer) => {
+			timer.timeLeftInSeconds -= 1;
+
+			return timer;
 		});
 	}
 
 	private finish() {
 		this.pause();
+	}
+
+	private clear() {
+		this.update((timer) => {
+			// timer.startedTime = null;
+
+			return timer;
+		});
+		this.interval = null;
 	}
 
 	pause() {
@@ -63,26 +81,10 @@ export class Timer {
 		}
 	}
 
-	private clear() {
-		this.update((timer) => {
-			// timer.startedTime = null;
-
-			return timer;
-		});
-		this.interval = null;
-	}
-
-	private decreaseTimeLeft() {
-		this.update((timer) => {
-			timer.timeLeftInSeconds -= 1;
-
-			return timer;
-		});
-	}
-
+	// needs: decreaseTimeLeft, finish, clear
 	start() {
 		this.update((timer) => {
-			timer.startedTime = new Date().toISOString();
+			timer.startedTime = DateTime.now();
 			timer.isPaused = false;
 
 			return timer;
