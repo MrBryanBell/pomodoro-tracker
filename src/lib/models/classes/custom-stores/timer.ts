@@ -2,6 +2,8 @@
 import { DateTime } from 'luxon';
 import { derived, get, writable } from 'svelte/store';
 
+import { clock } from '$store/clock';
+
 export interface TimerSettings {
 	durationInMinutes: number;
 }
@@ -115,6 +117,16 @@ export class Timer {
 			timer.timeLeftInSeconds = duration * 60;
 
 			return timer;
+		});
+	}
+
+	get formattedEndTime$() {
+		return derived([this, clock], ([timer, clock]) => {
+			// timer.timeLeftInSeconds; //?
+			const dateTimeFromTimeLeft = DateTime.fromMillis(timer.timeLeftInSeconds * 1000);
+			const endTime = clock.plus({ milliseconds: dateTimeFromTimeLeft.toMillis() });
+
+			return endTime.toFormat('hh:mma');
 		});
 	}
 }

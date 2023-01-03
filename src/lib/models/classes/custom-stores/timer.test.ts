@@ -1,4 +1,4 @@
-// import { type DateObjectUnits, DateTime } from 'luxon';
+import { DateTime } from 'luxon';
 import { get } from 'svelte/store';
 import { vi } from 'vitest';
 
@@ -160,6 +160,34 @@ describe('Timer', () => {
 			timer.setDurationInMinutes(20);
 			const durationInMinutes = get(timer.durationInMinutes$);
 			expect(durationInMinutes).toBe(20);
+		});
+	});
+
+	describe('formattedEndTime$ property', () => {
+		it('should return a string', () => {
+			const endTime = get(timer.formattedEndTime$);
+			expect(typeof endTime).toBe('string');
+		});
+
+		it('should return a string in format "hh:mma", ex: "05:30AM"', () => {
+			const endTime = get(timer.formattedEndTime$);
+			const regex = new RegExp(/^(0[0-9]|1[0-2]):[0-5][0-9](AM|PM)$/);
+			expect(regex.test(endTime)).toBe(true);
+		});
+
+		it('should return endTime: $clock + Timer-timeLeft-milliseconds', () => {
+			// Using real timers because it's almost impossible to mock Luxon in vitest
+			// a better solution would be to mock vitest's virtual time to an specific time (ex: 2023-01-01 8:00:00) and verify that the end-time is 8:25
+			vi.useRealTimers();
+
+			const now = DateTime.now();
+			// My local time
+			now.toFormat('hh:mma'); //?
+			// My local time + 25 minutes
+			const expectedEndTime = now.plus({ minutes: 25 }).toFormat('hh:mma'); //?
+
+			const endTime = get(timer.formattedEndTime$);
+			expect(endTime).toBe(expectedEndTime);
 		});
 	});
 });
