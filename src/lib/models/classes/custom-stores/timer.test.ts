@@ -75,6 +75,27 @@ describe('Timer', () => {
 
 			expect(isPaused).toBe(false);
 		});
+
+		it('should not start if time-left is 00:00', () => {
+			vi.useFakeTimers();
+			let timeLeftInMinutes: string | undefined = undefined;
+			const unsubscribe = timer.timeLeftInMinutes$.subscribe((value) => {
+				timeLeftInMinutes = value;
+			});
+
+			// Start timer and advance virtual-time by 25 minutes
+			timer.start();
+			vi.advanceTimersByTime(25 * 60 * 1000);
+			expect(timeLeftInMinutes).toBe('00:00');
+
+			// Start timer again
+			timer.start();
+			// timeLeftInMinutes should still be '00:00'
+			vi.advanceTimersByTime(5 * 60 * 1000);
+			expect(timeLeftInMinutes).toBe('00:00');
+
+			unsubscribe();
+		});
 	});
 
 	describe('pause() method', () => {

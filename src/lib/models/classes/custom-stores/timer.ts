@@ -84,7 +84,12 @@ export class Timer {
 	}
 
 	// needs: decreaseTimeLeft, finish, clear
+	// move interval to a separate method
 	start() {
+		const timeLeftInSeconds = get(this).timeLeftInSeconds;
+		if (timeLeftInSeconds === 0) {
+			return;
+		}
 		this.update((timer) => {
 			timer.startedTime = DateTime.now();
 			timer.isPaused = false;
