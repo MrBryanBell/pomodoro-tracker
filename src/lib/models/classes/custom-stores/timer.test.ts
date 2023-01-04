@@ -211,4 +211,51 @@ describe('Timer', () => {
 			expect(endTime).toBe(expectedEndTime);
 		});
 	});
+
+	describe('elapsedTimeInMinutes$ property', () => {
+		it('should return a number', () => {
+			const elapsedTime = get(timer.elapsedTimeInMinutes$);
+			expect(typeof elapsedTime).toBe('number');
+			expect(elapsedTime).not.toBeNaN();
+		});
+
+		it('should be 0 or a positive number', () => {
+			const elapsedTime = get(timer.elapsedTimeInMinutes$);
+			expect(elapsedTime).toBeGreaterThanOrEqual(0);
+		});
+
+		it('should return 10', () => {
+			vi.useFakeTimers();
+			const minutesToAdvance = 10;
+
+			// Advance time by 10 minutes
+			timer.start();
+			vi.advanceTimersByTime(minutesToAdvance * 60 * 1000);
+			timer.pause();
+
+			const elapsedTime = get(timer.elapsedTimeInMinutes$);
+			expect(elapsedTime).toBe(10);
+		});
+
+		it('should not change if timer is paused', () => {
+			// Arrange
+			vi.useFakeTimers();
+			const minutesToAdvance = 15;
+			let elapsedTime: number | undefined = undefined;
+			const unsubscribe = timer.elapsedTimeInMinutes$.subscribe((value) => {
+				elapsedTime = value;
+			});
+
+			// Act
+			timer.start();
+			vi.advanceTimersByTime(minutesToAdvance * 60 * 1000);
+			timer.pause();
+			// advance 5 minutes more
+			vi.advanceTimersByTime(5 * 60 * 1000);
+
+			// Assert
+			expect(elapsedTime).toBe(15);
+			unsubscribe();
+		});
+	});
 });

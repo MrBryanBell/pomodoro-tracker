@@ -134,4 +134,14 @@ export class Timer {
 			return endTime.toFormat('hh:mma');
 		});
 	}
+
+	get elapsedTimeInMinutes$() {
+		return derived(this, (timer) => {
+			const { durationInMinutes, timeLeftInSeconds } = timer;
+			const timeLeftInMinutes = timeLeftInSeconds / 60;
+			const elapsedTimeInMinutes = durationInMinutes - timeLeftInMinutes;
+
+			return Math.round(elapsedTimeInMinutes * 10) / 10;
+		});
+	}
 }
