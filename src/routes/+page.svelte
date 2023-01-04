@@ -1,12 +1,17 @@
 <script lang="ts">
-	import { timer } from '$lib/store/timer';
-
-	const timeLeftInMinutes = timer.timeLeftInMinutes$;
+	import Timer from '$components/Timer/Timer.svelte';
 </script>
 
-<h1>{$timeLeftInMinutes}</h1>
-<button on:click={() => timer.start()}>start</button>
-<button on:click={() => timer.pause()}>pause</button>
-<button on:click={() => timer.restart()}>restart</button>
+<main>
+	<Timer />
+</main>
 
 <a href="/settings">settings</a>
+
+<style>
+	main {
+		display: grid;
+		place-content: center;
+		height: 100vh;
+	}
+</style>
