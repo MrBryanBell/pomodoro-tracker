@@ -1,11 +1,13 @@
 # Podomoro-tracker
----
+
 This project has no official name right now. 
 
 It's a desktop app to track your work sessions. It's built with Sveltekit, Rust and Tauri App (more complexion is coming soon: d3, rive-app, luxon).
 
+
+
 ## Why?
----
+
 I'm building this to:
 - learn Tauri App (build desktop apps with Rust and a webview)
 - learn how to do releases on Github (using Github Actions)
