@@ -2,7 +2,10 @@
 import { DateTime } from 'luxon';
 import { derived, get, writable } from 'svelte/store';
 
+import { workSessions } from '$lib/store/work-sessions';
 import { clock } from '$store/clock';
+
+import type { WorkSessionObject } from '../work-session';
 
 export interface TimerSettings {
 	durationInMinutes: number;
@@ -60,6 +63,7 @@ export class Timer {
 
 	private finish() {
 		this.pause();
+		this.addNewWorkSession();
 	}
 
 	private clear() {
@@ -102,7 +106,6 @@ export class Timer {
 			const timeLeftInSeconds = get(this).timeLeftInSeconds;
 			if (timeLeftInSeconds === 0) {
 				this.finish();
-				// this.addNewWorkSession();
 				this.clear();
 			}
 		}, 1000);
@@ -127,7 +130,6 @@ export class Timer {
 
 	get formattedEndTime$() {
 		return derived([this, clock], ([timer, clock]) => {
-			// timer.timeLeftInSeconds; //?
 			const dateTimeFromTimeLeft = DateTime.fromMillis(timer.timeLeftInSeconds * 1000);
 			const endTime = clock.plus({ milliseconds: dateTimeFromTimeLeft.toMillis() });
 
@@ -143,5 +145,15 @@ export class Timer {
 
 			return Math.round(elapsedTimeInMinutes * 10) / 10;
 		});
+	}
+
+	private addNewWorkSession() {
+		const workSessionProps: WorkSessionObject = {
+			startTimeInISO: get(this).startedTime.toISO(),
+			durationInMinutes: get(this.elapsedTimeInMinutes$),
+			endTimeInISO: DateTime.now().toISO()
+		};
+
+		workSessions.add(workSessionProps);
 	}
 }
