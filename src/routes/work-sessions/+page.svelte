@@ -6,11 +6,25 @@
 
 <a href="/">Go back to Home</a>
 
-{#each $sessions as session}
-	<p>{session.id}</p>
-	<p>{session.startTimeInISO}</p>
-	<p>{session.endTimeInISO}</p>
-	<p>{session.durationInMinutes}</p>
+{#each $sessions as { id, startTimeInISO, endTimeInISO, durationInMinutes }}
+	<div>
+		<p>{id}</p>
+		<p>{startTimeInISO}</p>
+		<p>{endTimeInISO}</p>
+		<p>{durationInMinutes}</p>
+		<button on:click={() => workSessions.delete(id)}>delete</button>
+	</div>
 {:else}
 	<p>you don't have any sessions for now</p>
 {/each}
+
+<style>
+	div,
+	p {
+		border: 1px solid white;
+	}
+
+	div {
+		display: flex;
+	}
+</style>

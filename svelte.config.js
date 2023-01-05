@@ -14,7 +14,8 @@ const config = {
 			$components: "src/lib/components",
 			$models: "src/lib/models",
 			$store: "src/lib/store",
-			$icons: "src/lib/icons"
+			$icons: "src/lib/icons",
+			$classes: "src/lib/models/classes"
 		}
 	}
 };
