@@ -7,6 +7,7 @@
 </main>
 
 <a href="/settings">settings</a>
+<a href="/work-sessions">work sessions</a>
 
 <style>
 	main {
