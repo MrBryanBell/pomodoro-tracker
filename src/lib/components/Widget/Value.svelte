@@ -1,10 +1,13 @@
 <script lang="ts">
-	export let unit = 'po';
+	type Unit = '' | 'hr' | 'po';
+	export let unit: Unit = '';
 </script>
 
 <section>
 	<slot />
-	<span>{unit}.</span>
+	{#if unit}
+		<span>{unit}.</span>
+	{/if}
 </section>
 
 <style>

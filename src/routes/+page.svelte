@@ -5,13 +5,17 @@
 	import { workSessions } from '$lib/store/work-sessions';
 
 	const allWorkSessionsToday = workSessions.allFromToday$;
+	const totalTimeInHours = workSessions.totalTimeFromTodayInHours$;
 </script>
 
 <main>
 	<Timer />
 	<section>
-		<Widget name="Tiempo total" annotation="hoy">
-			<Value unit="hr">{$allWorkSessionsToday.length}</Value>
+		<Widget name="Pomodoros" annotation="hoy" gridArea="pomodoros">
+			<Value unit="po">{$allWorkSessionsToday.length}</Value>
+		</Widget>
+		<Widget name="Tiempo total" annotation="hoy" primary gridArea="tiempo">
+			<Value unit="hr">{$totalTimeInHours}</Value>
 		</Widget>
 	</section>
 </main>
@@ -28,5 +32,14 @@
 		height: 100vh;
 
 		grid-template-columns: 290px auto;
+	}
+
+	section {
+		display: grid;
+		grid-template-columns: repeat(3, 140px);
+		grid-auto-rows: 144px;
+		gap: 4px;
+
+		grid-template-areas: 'pomodoros tiempo tiempo';
 	}
 </style>

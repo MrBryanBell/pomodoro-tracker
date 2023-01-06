@@ -1,9 +1,11 @@
 <script lang="ts">
 	export let name = 'Pomodoros';
 	export let annotation = 'hoy';
+	export let primary = false;
+	export let gridArea: string;
 </script>
 
-<div class="main-wrapper">
+<div class="main-wrapper" class:primary style:grid-area={gridArea}>
 	<section class="widget-labels">
 		<p class="widget-name">{name}</p>
 		<span>*{annotation}</span>
@@ -16,9 +18,6 @@
 
 <style>
 	.main-wrapper {
-		width: 140px;
-		height: 144px;
-
 		background-color: var(--surface-2);
 		border: 0.5px solid #292929;
 		border-radius: 32px;
@@ -60,5 +59,9 @@
 		letter-spacing: -0.015em;
 
 		color: #c2c2c2;
+	}
+
+	.primary {
+		background-color: var(--surface-3);
 	}
 </style>
