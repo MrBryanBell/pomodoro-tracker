@@ -11,15 +11,19 @@
 
 <main>
 	<Timer />
-	<section>
+
+	<section class="main-widgets-wrapper">
 		<Widget name="Pomodoros" annotation="hoy" gridArea="pomodoros">
 			<Value unit="po">{$allWorkSessionsToday.length}</Value>
 		</Widget>
 		<Widget name="Tiempo total" annotation="hoy" primary gridArea="tiempo">
 			<Value unit="hr">{$totalTimeFromToday}</Value>
 		</Widget>
-		<Widget name="Últimos 7 días" annotation="19/12 - 26/12" primary gridArea="last-7-days">
+		<Widget name="Últimos 7 días" annotation="19/12 - 26/12" gridArea="last-7-days">
 			<Value unit="hr">{$totalTimeFromLast7Days}</Value>
+		</Widget>
+		<Widget name="Meta diaria" annotation="pomodoros" gridArea="daily-goal">
+			<Value unit="po" goal="22">{$allWorkSessionsToday.length}</Value>
 		</Widget>
 	</section>
 </main>
@@ -38,15 +42,14 @@
 		grid-template-columns: 290px auto;
 	}
 
-	section {
+	section.main-widgets-wrapper {
 		display: grid;
-		grid-template-columns: repeat(3, 140px);
+		grid-template-columns: repeat(3, 140px) 210px;
 		grid-template-rows: 144px 216px;
-		column-gap: 4px;
-		row-gap: 16px;
+		gap: 16px;
 
 		grid-template-areas:
-			'pomodoros tiempo tiempo'
-			'last-7-days last-7-days last-7-days';
+			'pomodoros tiempo tiempo daily-goal'
+			'last-7-days last-7-days last-7-days daily-goal';
 	}
 </style>

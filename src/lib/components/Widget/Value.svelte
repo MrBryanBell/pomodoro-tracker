@@ -1,17 +1,23 @@
 <script lang="ts">
 	type Unit = '' | 'hr' | 'po';
 	export let unit: Unit = '';
+	export let goal = '';
 </script>
 
-<section>
-	<slot />
+<section class="main-wrapper">
+	<section class="data-wrapper">
+		<slot />
+		{#if goal}
+			<span>/{goal}</span>
+		{/if}
+	</section>
 	{#if unit}
 		<span>{unit}.</span>
 	{/if}
 </section>
 
 <style>
-	section {
+	.main-wrapper {
 		display: flex;
 		flex-direction: row;
 		gap: 4px;
@@ -26,6 +32,26 @@
 		font-feature-settings: 'tnum' on, 'lnum' on;
 
 		color: #ffffff;
+	}
+
+	.data-wrapper {
+		display: flex;
+		flex-direction: row;
+		gap: 0;
+	}
+
+	.data-wrapper span {
+		font-family: 'Mona Sans';
+		font-style: normal;
+		font-weight: 500;
+		font-size: 40px;
+		line-height: 100%;
+		/* identical to box height, or 40px */
+
+		letter-spacing: -0.03em;
+		font-feature-settings: 'tnum' on, 'lnum' on;
+
+		color: #707070;
 	}
 
 	section span {
