@@ -27,7 +27,7 @@ it('should create an instance', () => {
 
 // .sessions$
 it('should return an array', () => {
-	const sessions = get(workSessions.sessions$);
+	const sessions = get(workSessions.all$);
 	expect(Array.isArray(sessions)).toBe(true);
 });
 
@@ -36,7 +36,7 @@ it('should return add a new work-session', () => {
 	// workSessionProps is defined in beforeEach()
 	workSessions.add(workSessionProps);
 
-	const sessions = get(workSessions.sessions$);
+	const sessions = get(workSessions.all$);
 	expect(sessions.length).toEqual(1);
 	expect(sessions[0]).toBeInstanceOf(WorkSession);
 });
@@ -57,11 +57,39 @@ it('should return selected session', () => {
 it('should delete the session', () => {
 	// workSessionProps is defined in beforeEach()
 	const { id } = workSessions.add(workSessionProps);
-	expect(get(workSessions.sessions$).length).toBe(1);
+	expect(get(workSessions.all$).length).toBe(1);
 	workSessions.delete(id);
-	expect(get(workSessions.sessions$).length).toBe(0);
+	expect(get(workSessions.all$).length).toBe(0);
 });
 
+it('should return a number', () => {
+	// the total of all work sessions: count
+	const sessions = get(workSessions.all$).length;
+	expect(typeof sessions).toBe('number');
+});
+
+// total time from today
+it('should return a number', () => {
+	const totalTimefromToday = get(workSessions.totalTimeFromTodayInHours$);
+	expect(typeof totalTimefromToday).toBe('number');
+});
+
+it('should return a 50', () => {
+	const expectedTimeInMinutes = 50;
+	const expectedTimeInHours = Math.floor((expectedTimeInMinutes / 60) * 10) / 10;
+
+	workSessions.add({ ...workSessionProps, durationInMinutes: 20 });
+	workSessions.add({ ...workSessionProps, durationInMinutes: 30 });
+	const totalTimeFromToday = get(workSessions.totalTimeFromTodayInHours$);
+
+	expect(totalTimeFromToday).toBe(expectedTimeInHours);
+});
+
+it('should return an array', () => {
+	const expectedTimeInMinutes = 75;
+	// const expectedTimeInHours = Math.round((expectedTimeInMinutes / 60) * 10) / 10; //?
+	expectedTimeInMinutes / 60; //?
+});
 // it('should return an array', () => {});
 // it('should return an array', () => {});
 // it('should return an array', () => {});

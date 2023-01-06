@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { workSessions } from '$store/work-sessions';
 
-	const sessions = workSessions.sessions$;
+	const sessions = workSessions.all$;
 </script>
 
 <a href="/">Go back to Home</a>
@@ -17,6 +17,8 @@
 {:else}
 	<p>you don't have any sessions for now</p>
 {/each}
+
+<h2>Total pomodoros: {$sessions.length}</h2>
 
 <style>
 	div,

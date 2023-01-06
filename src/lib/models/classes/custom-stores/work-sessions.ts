@@ -14,8 +14,25 @@ export class WorkSessions {
 		this.set = set;
 	}
 
-	get sessions$() {
-		return derived(this, ($this) => $this);
+	// this could eventually be get all({ fromToday: true }})
+	get all$() {
+		return derived(this, (workSessions) => workSessions);
+	}
+
+	get allFromToday$() {
+		return derived(this, (workSessions) => workSessions);
+	}
+
+	get totalTimeFromTodayInHours$() {
+		return derived(this, (workSessions) => {
+			const timeInMinutes = workSessions.reduce((acc, session) => {
+				return acc + session.durationInMinutes;
+			}, 0);
+
+			const timeInHours = timeInMinutes / 60;
+
+			return Math.floor(timeInHours * 10) / 10;
+		});
 	}
 
 	add(workSessionObject: WorkSessionObject) {
