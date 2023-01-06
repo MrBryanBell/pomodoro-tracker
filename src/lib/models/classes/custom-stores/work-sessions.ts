@@ -35,6 +35,18 @@ export class WorkSessions {
 		});
 	}
 
+	get totalTimeFromLast7Days$() {
+		return derived(this, (workSessions) => {
+			const timeInMinutes = workSessions.reduce((acc, session) => {
+				return acc + session.durationInMinutes;
+			}, 0);
+
+			const timeInHours = timeInMinutes / 60;
+
+			return Math.floor(timeInHours * 10) / 10;
+		});
+	}
+
 	add(workSessionObject: WorkSessionObject) {
 		const newWorkSession = new WorkSession(workSessionObject);
 		this.update((sessions) => [...sessions, newWorkSession]);

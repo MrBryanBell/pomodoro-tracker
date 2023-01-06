@@ -5,7 +5,8 @@
 	import { workSessions } from '$lib/store/work-sessions';
 
 	const allWorkSessionsToday = workSessions.allFromToday$;
-	const totalTimeInHours = workSessions.totalTimeFromTodayInHours$;
+	const totalTimeFromToday = workSessions.totalTimeFromTodayInHours$;
+	const totalTimeFromLast7Days = workSessions.totalTimeFromLast7Days$;
 </script>
 
 <main>
@@ -15,7 +16,10 @@
 			<Value unit="po">{$allWorkSessionsToday.length}</Value>
 		</Widget>
 		<Widget name="Tiempo total" annotation="hoy" primary gridArea="tiempo">
-			<Value unit="hr">{$totalTimeInHours}</Value>
+			<Value unit="hr">{$totalTimeFromToday}</Value>
+		</Widget>
+		<Widget name="Últimos 7 días" annotation="19/12 - 26/12" primary gridArea="last-7-days">
+			<Value unit="hr">{$totalTimeFromLast7Days}</Value>
 		</Widget>
 	</section>
 </main>
@@ -37,9 +41,12 @@
 	section {
 		display: grid;
 		grid-template-columns: repeat(3, 140px);
-		grid-auto-rows: 144px;
-		gap: 4px;
+		grid-template-rows: 144px 216px;
+		column-gap: 4px;
+		row-gap: 16px;
 
-		grid-template-areas: 'pomodoros tiempo tiempo';
+		grid-template-areas:
+			'pomodoros tiempo tiempo'
+			'last-7-days last-7-days last-7-days';
 	}
 </style>
