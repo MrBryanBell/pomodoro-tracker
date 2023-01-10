@@ -7,12 +7,17 @@
 		const newCategory = new Category({ name: newCategoryName });
 		$categories = [...$categories, newCategory];
 	}
+
+	function deleteCategory(id: string) {
+		$categories = $categories.filter((category) => category.id !== id);
+	}
 </script>
 
 <h1>Categorías</h1>
 {#each $categories as { id, name }}
 	<div class="category-wrapper">
 		<p>{id}, {name}</p>
+		<button on:click={() => deleteCategory(id)}>Delete</button>
 	</div>
 {/each}
 
