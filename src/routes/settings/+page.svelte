@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { timer } from '$store/timer';
 	import Categories from '$components/Categories/Categories.svelte';
+	import Tasks from '$components/Tasks/Tasks.svelte';
 
 	let customTimeInMinutes = 25;
 </script>
@@ -13,3 +14,4 @@
 
 <a href="/">Home</a>
 <Categories />
+<Tasks />
