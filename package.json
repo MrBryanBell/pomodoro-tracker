@@ -50,6 +50,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@tauri-apps/api": "^1.2.0",
 		"luxon": "^3.2.0"
 	}
 }

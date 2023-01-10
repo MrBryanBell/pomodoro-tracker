@@ -61,9 +61,11 @@ export class Timer {
 		});
 	}
 
-	private finish() {
+	private async finish() {
 		this.pause();
 		this.addNewWorkSession();
+		const { sendNotification } = await import('@tauri-apps/api/notification');
+		sendNotification({ title: 'Sesión de trabajo terminada', body: '¡Buen trabajo!' });
 	}
 
 	private clear() {
