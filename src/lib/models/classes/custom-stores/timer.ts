@@ -91,7 +91,7 @@ export class Timer {
 
 	// needs: decreaseTimeLeft, finish, clear
 	// move interval to a separate method
-	start() {
+	async start() {
 		const timeLeftInSeconds = get(this).timeLeftInSeconds;
 		if (timeLeftInSeconds === 0) {
 			return;
@@ -111,6 +111,9 @@ export class Timer {
 				this.clear();
 			}
 		}, 1000);
+
+		const { sendNotification } = await import('@tauri-apps/api/notification');
+		sendNotification({ title: 'Sesión de trabajo iniciada', body: 'Aprovecha el momento' });
 	}
 
 	restart() {
