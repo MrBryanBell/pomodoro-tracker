@@ -26,7 +26,6 @@
 <style>
 	.main-wrapper {
 		padding: 16px;
-		padding-bottom: 12px;
 		min-width: 290px;
 		background-color: var(--surface-2);
 		border-radius: 52px;
