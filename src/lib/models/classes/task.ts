@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon';
-import { get } from 'svelte/store';
 
 import { categories } from '$store/categories';
 
@@ -10,10 +9,12 @@ interface ITask {
 	name: string;
 	createdAt: string;
 	updatedAt: string;
-	categoryId: string;
+	category: Category;
 }
 
-export type TaskObject = Pick<ITask, 'name' | 'categoryId'>;
+export interface TaskProps extends Pick<ITask, 'name'> {
+	categoryId: string;
+}
 
 export class Task {
 	public readonly id: string;
@@ -22,11 +23,11 @@ export class Task {
 	public updatedAt: string;
 	public category: Category;
 
-	constructor({ name, categoryId }: TaskObject) {
+	constructor({ name, categoryId }: TaskProps) {
 		this.id = crypto.randomUUID();
 		this.name = name;
 		this.createdAt = DateTime.now().toISO();
 		this.updatedAt = DateTime.now().toISO();
-		this.category = get(categories).find((category) => category.id === categoryId);
+		this.category = categories.findById(categoryId);
 	}
 }

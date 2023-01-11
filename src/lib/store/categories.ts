@@ -1,5 +1,3 @@
-import { writable } from 'svelte/store';
+import { Categories } from '$models/classes/custom-stores/categories';
 
-import type { Category } from '$models/classes/category';
-
-export const categories = writable<Category[]>([]);
+export const categories = new Categories();

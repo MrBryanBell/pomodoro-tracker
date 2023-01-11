@@ -1,25 +1,18 @@
 <script lang="ts">
 	import { tasks } from '$store/tasks';
-	import { Task } from '$models/classes/task';
 
 	let newTaskName = '';
 	let categoryId = '';
-	function addTask() {
-		const newCategory = new Task({ name: newTaskName, categoryId });
-		$tasks = [...$tasks, newCategory];
-	}
 
-	function deleteTask(id: string) {
-		$tasks = $tasks.filter((task) => task.id !== id);
-	}
+	const allTasks = tasks.all$;
 </script>
 
 <h1>Tareas</h1>
-{#each $tasks as { id, name, category }}
+{#each $allTasks as { id, name, category }}
 	<div class="task-wrapper">
 		<b>id: {id}, tarea: {name}</b>
 		<p>categoría: {category.name}</p>
-		<button on:click={() => deleteTask(id)}>Delete</button>
+		<button on:click={() => tasks.delete(id)}>Delete</button>
 	</div>
 {/each}
 
@@ -28,7 +21,7 @@
 <input type="text" bind:value={newTaskName} placeholder="Configuración Eslint" />
 <label for="">Categoría</label>
 <input type="text" bind:value={categoryId} placeholder="Id de la categoría" />
-<button on:click={addTask}>Agregar</button>
+<button on:click={() => tasks.add({ name: newTaskName, categoryId })}>Agregar</button>
 
 <style>
 	div.task-wrapper {

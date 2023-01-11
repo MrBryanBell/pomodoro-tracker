@@ -1,13 +1,13 @@
 import { DateTime } from 'luxon';
 
 interface ICategory {
-	id: number;
+	id: string;
 	name: string;
 	createdAt: string;
 	updatedAt: string;
 }
 
-export type CategoryObject = Pick<ICategory, 'name'>;
+export type CategoryProps = Pick<ICategory, 'name'> & Partial<Pick<ICategory, 'id'>>;
 
 export class Category {
 	public readonly id: string;
@@ -15,8 +15,8 @@ export class Category {
 	public readonly createdAt: string;
 	public updatedAt: string;
 
-	constructor({ name }: CategoryObject) {
-		this.id = crypto.randomUUID();
+	constructor({ id, name }: CategoryProps) {
+		this.id = id ?? crypto.randomUUID();
 		this.name = name;
 		this.createdAt = DateTime.now().toISO();
 		this.updatedAt = DateTime.now().toISO();

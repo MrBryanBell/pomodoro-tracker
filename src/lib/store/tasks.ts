@@ -1,5 +1,3 @@
-import { writable } from 'svelte/store';
+import { Tasks } from '$models/classes/custom-stores/tasks';
 
-import type { Task } from '$lib/models/classes/task';
-
-export const tasks = writable<Task[]>([]);
+export const tasks = new Tasks();
