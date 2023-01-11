@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/member-ordering */
+import type { Options as NotificationOptions } from '@tauri-apps/api/notification';
 import { DateTime } from 'luxon';
 import { derived, get, writable } from 'svelte/store';
 
 import { workSessions } from '$lib/store/work-sessions';
 import { clock } from '$store/clock';
+import { tasks } from '$store/tasks';
 
 import type { WorkSessionObject } from '../work-session';
 
@@ -61,11 +63,19 @@ export class Timer {
 		});
 	}
 
-	private async finish() {
+	private finish() {
 		this.pause();
 		this.addNewWorkSession();
-		const { sendNotification } = await import('@tauri-apps/api/notification');
-		sendNotification({ title: 'Sesión de trabajo terminada', body: '¡Buen trabajo!' });
+		const notificationConfig: NotificationOptions = {
+			title: 'Sesión de trabajo finalizada',
+			body: '¡Bien hecho!'
+		};
+
+		import('@tauri-apps/api/notification')
+			.then(({ sendNotification }) => sendNotification(notificationConfig))
+			.catch((error) => {
+				console.error(error);
+			});
 	}
 
 	private clear() {
@@ -91,7 +101,7 @@ export class Timer {
 
 	// needs: decreaseTimeLeft, finish, clear
 	// move interval to a separate method
-	async start() {
+	start() {
 		const timeLeftInSeconds = get(this).timeLeftInSeconds;
 		if (timeLeftInSeconds === 0) {
 			return;
@@ -112,8 +122,16 @@ export class Timer {
 			}
 		}, 1000);
 
-		const { sendNotification } = await import('@tauri-apps/api/notification');
-		sendNotification({ title: 'Sesión de trabajo iniciada', body: 'Aprovecha el momento' });
+		const notificationConfig: NotificationOptions = {
+			title: 'Sesión de trabajo iniciada',
+			body: 'Aprovecha el momento'
+		};
+
+		import('@tauri-apps/api/notification')
+			.then(({ sendNotification }) => sendNotification(notificationConfig))
+			.catch((error) => {
+				console.error(error);
+			});
 	}
 
 	restart() {
@@ -153,10 +171,15 @@ export class Timer {
 	}
 
 	private addNewWorkSession() {
+		const task = get(tasks).current;
+		if (!task) {
+			throw new Error('No task selected');
+		}
 		const workSessionProps: WorkSessionObject = {
 			startTimeInISO: get(this).startedTime.toISO(),
 			durationInMinutes: get(this.elapsedTimeInMinutes$),
-			endTimeInISO: DateTime.now().toISO()
+			endTimeInISO: DateTime.now().toISO(),
+			task
 		};
 
 		workSessions.add(workSessionProps);
