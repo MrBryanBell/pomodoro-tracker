@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { timer } from '$store/timer';
 	import { Button, CountDown, EndTime, Name } from './tokens';
+	import { tasks } from '$store/tasks';
 
 	const timeLeftInMinutes = timer.timeLeftInMinutes$;
 	const formattedEndTime = timer.formattedEndTime$;
@@ -9,6 +10,7 @@
 
 <div class="main-wrapper">
 	<Name>tiempo restante</Name>
+	<p>Tarea: {$tasks.current}</p>
 
 	<CountDown>{$timeLeftInMinutes}</CountDown>
 	<EndTime>{$formattedEndTime}</EndTime>

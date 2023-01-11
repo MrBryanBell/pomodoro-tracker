@@ -3,10 +3,18 @@
 	import Widget from '$components/Widget/Widget.svelte';
 	import Value from '$lib/components/Widget/Value.svelte';
 	import { workSessions } from '$lib/store/work-sessions';
+	import { tasks } from '$store/tasks';
 
 	const allWorkSessionsToday = workSessions.allFromToday$;
 	const totalTimeFromToday = workSessions.totalTimeFromTodayInHours$;
 	const totalTimeFromLast7Days = workSessions.totalTimeFromLast7Days$;
+
+	const allTasks = tasks.all$;
+
+	function updateCurrentTask(e: InputEvent) {
+		const taskName = (e.target as HTMLInputElement).value;
+		tasks.setCurrentByName(taskName);
+	}
 </script>
 
 <main>
@@ -30,7 +38,13 @@
 
 <a href="/settings">settings</a>
 <a href="/work-sessions">work sessions</a>
-<a href="/new">new components</a>
+
+<input list="tasks" on:change={(e) => updateCurrentTask(e)} />
+<datalist id="tasks">
+	{#each $allTasks as { name }}
+		<option value={name}>{name}</option>
+	{/each}
+</datalist>
 
 <style>
 	main {
