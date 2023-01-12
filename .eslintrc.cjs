@@ -67,5 +67,8 @@ module.exports = {
 		// 	}
 		// ],
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
+		// Indent on Method Chaining
+		// 'newline-per-chained-call': ["error", { "ignoreChainWithDepth": 4 }],
+		// indent: ["error", "tab", { "MemberExpression": 2 }]
 	},
 };

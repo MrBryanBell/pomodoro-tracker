@@ -50,6 +50,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@supabase/supabase-js": "^2.4.0",
 		"@tauri-apps/api": "^1.2.0",
 		"luxon": "^3.2.0"
 	}
