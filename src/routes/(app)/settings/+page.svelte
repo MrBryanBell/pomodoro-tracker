@@ -12,6 +12,6 @@
 
 <pre>{JSON.stringify($timer)}</pre>
 
-<a href="/">Home</a>
+<a href="/home">Home</a>
 <Categories />
 <Tasks />

@@ -4,7 +4,7 @@
 	const sessions = workSessions.all$;
 </script>
 
-<a href="/">Go back to Home</a>
+<a href="/home">Go back to Home</a>
 
 {#each $sessions as { id, startTimeInISO, endTimeInISO, durationInMinutes, task }}
 	<div>
