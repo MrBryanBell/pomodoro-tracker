@@ -1,24 +1,28 @@
 import { get } from 'svelte/store';
 
-import { categories } from '$store/categories';
+import { TasksStore } from '$classes/custom-stores/tasks-store';
+import { Task } from '$classes/task';
+import type { CreateTaskProps } from '$models/task';
+import { categoriesStore as categories } from '$store/categories';
 
-import type { TaskProps } from '../task';
-import { Task } from '../task';
-import { Tasks } from './tasks';
-
-let tasks: Tasks;
-categories.add({ id: 'abc', name: 'Golang' });
+let tasks: TasksStore;
+categories.add({
+	id: 'abc',
+	name: 'Golang',
+	createdAt: new Date().toISOString(),
+	updatedAt: new Date().toISOString()
+});
 
 beforeEach(() => {
-	tasks = new Tasks();
+	tasks = new TasksStore();
 });
 
 it('should be a function ', () => {
-	expect(typeof Tasks).toBe('function');
+	expect(typeof TasksStore).toBe('function');
 });
 
 it('should create an instance', () => {
-	expect(tasks).toBeInstanceOf(Tasks);
+	expect(tasks).toBeInstanceOf(TasksStore);
 });
 
 it('should have subscribe method', () => {
@@ -32,7 +36,7 @@ it('should return all tasks', () => {
 });
 
 it('should add a task', () => {
-	const newTaskProps: TaskProps = {
+	const newTaskProps: CreateTaskProps = {
 		name: 'Crear una API Rest de libros',
 		categoryId: 'abc'
 	};

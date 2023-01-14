@@ -1,8 +1,14 @@
-import { type CategoryObject, Category } from './classes/category';
+import { Category } from '$classes/category';
+import type { CategoryObject } from '$models/category';
 
 let category: Category;
 beforeEach(() => {
-	const categoryConfig: CategoryObject = { name: 'Render 3D' };
+	const categoryConfig: CategoryObject = {
+		id: '1',
+		name: 'Render 3D',
+		createdAt: new Date().toISOString(),
+		updatedAt: new Date().toISOString()
+	};
 	category = new Category(categoryConfig);
 });
 

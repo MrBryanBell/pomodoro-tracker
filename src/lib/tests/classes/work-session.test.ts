@@ -1,8 +1,8 @@
-import { categories } from '$store/categories';
-
-import { Category } from './category';
-import { Task } from './task';
-import { type WorkSessionObject, WorkSession } from './work-session';
+import { Category } from '$classes/category';
+import { Task } from '$classes/task';
+import { WorkSession } from '$classes/work-session';
+import type { CreateWorkSessionProps } from '$models/work-session';
+import { categoriesStore as categories } from '$store/categories';
 
 describe('WorkSession', () => {
 	let workSession: WorkSession;
@@ -11,7 +11,7 @@ describe('WorkSession', () => {
 		const newCategory = new Category({ name: 'Test Category', id: '1' });
 		categories.add(newCategory);
 		const newTask = new Task({ name: 'Test Task', categoryId: '1' });
-		const workSessionConfig: WorkSessionObject = {
+		const workSessionConfig: CreateWorkSessionProps = {
 			durationInMinutes: 20,
 			endTimeInISO: '2023-01-05T03:22:32.324-06:00',
 			startTimeInISO: '2023-01-05T03:42:46.458-06:00',

@@ -1,26 +1,29 @@
 import { get } from 'svelte/store';
 
-import { type WorkSessionObject, WorkSession } from '../work-session';
-import { WorkSessions } from './work-sessions';
+import { WorkSessionsStore } from '$classes/custom-stores/work-sessions-store';
+import { Task } from '$classes/task';
+import { WorkSession } from '$classes/work-session';
+import type { CreateWorkSessionProps } from '$models/work-session';
 
-let workSessions: WorkSessions;
-let workSessionProps: WorkSessionObject;
+let workSessions: WorkSessionsStore;
+let workSessionProps: CreateWorkSessionProps;
 
 beforeEach(() => {
-	workSessions = new WorkSessions();
+	workSessions = new WorkSessionsStore();
 	workSessionProps = {
 		durationInMinutes: 20,
 		startTimeInISO: '2023-01-05T03:42:46.458-06:00',
-		endTimeInISO: '2023-01-05T03:22:32.324-06:00'
+		endTimeInISO: '2023-01-05T03:22:32.324-06:00',
+		task: new Task({ name: 'test task', categoryId: 'abc' })
 	};
 });
 
 it('should be a function ', () => {
-	expect(typeof WorkSessions).toBe('function');
+	expect(typeof WorkSessionsStore).toBe('function');
 });
 
 it('should create an instance', () => {
-	expect(workSessions).toBeInstanceOf(WorkSessions);
+	expect(workSessions).toBeInstanceOf(WorkSessionsStore);
 	expect(workSessions).toBeDefined();
 	expect(typeof workSessions).toBe('object');
 });

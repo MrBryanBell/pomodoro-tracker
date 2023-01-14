@@ -1,4 +1,4 @@
-import { Clock } from './clock';
+import { Clock } from '$classes/custom-stores/clock-store';
 
 describe('Clock', () => {
 	let clock: Clock;

@@ -1,20 +1,21 @@
 import { get } from 'svelte/store';
 
-import { type CategoryProps, Category } from '../category';
-import { Categories } from './categories';
+import { Category } from '$classes/category';
+import { CategoriesStore } from '$classes/custom-stores/categories-store';
+import type { CreateCategoryProps } from '$models/category';
 
-let categories: Categories;
+let categories: CategoriesStore;
 
 beforeEach(() => {
-	categories = new Categories();
+	categories = new CategoriesStore();
 });
 
 it('should be a function ', () => {
-	expect(typeof Categories).toBe('function');
+	expect(typeof CategoriesStore).toBe('function');
 });
 
 it('should create an instance', () => {
-	expect(categories).toBeInstanceOf(Categories);
+	expect(categories).toBeInstanceOf(CategoriesStore);
 });
 
 it('should have subscribe method', () => {
@@ -28,11 +29,11 @@ it('should return all categories', () => {
 });
 
 describe('...', () => {
-	const newCategoryProps: CategoryProps = {
+	const newCategoryProps: CreateCategoryProps = {
 		name: 'Crear configuración personalizada Eslint'
 	};
 	beforeEach(() => {
-		categories = new Categories();
+		categories = new CategoriesStore();
 	});
 
 	it('should add a category', () => {

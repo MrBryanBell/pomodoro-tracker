@@ -2,14 +2,19 @@ import { DateTime } from 'luxon';
 import { get } from 'svelte/store';
 import { vi } from 'vitest';
 
-import type { TimerSettings } from '$lib/models/classes/custom-stores/timer';
-import { Timer } from '$lib/models/classes/custom-stores/timer';
-import { categories } from '$store/categories';
-import { tasks } from '$store/tasks';
+import type { TimerSettings } from '$lib/classes/custom-stores/timer-store';
+import { TimerStore as Timer } from '$lib/classes/custom-stores/timer-store';
+import { categoriesStore as categories } from '$store/categories';
+import { tasksStore as tasks } from '$store/tasks';
 
 describe('Timer', () => {
 	let timer: Timer;
-	categories.add({ name: 'Eslint', id: '1' });
+	categories.add({
+		name: 'Eslint',
+		id: '1',
+		updatedAt: DateTime.now().toISO(),
+		createdAt: DateTime.now().toISO()
+	});
 	const { name: newTaskName } = tasks.add({ name: 'Configuración Eslint', categoryId: '1' });
 	tasks.setCurrentByName(newTaskName);
 
