@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { tasksStore as tasks } from '$store/tasks';
+	import { createTask, deleteTask } from '$services/memory/tasks';
 
 	let newTaskName = '';
 	let categoryId = '';
@@ -12,7 +13,7 @@
 	<div class="task-wrapper">
 		<b>id: {id}, tarea: {name}</b>
 		<p>categoría: {category.name}</p>
-		<button on:click={() => tasks.delete(id)}>Delete</button>
+		<button on:click={() => deleteTask(id)}>Delete</button>
 	</div>
 {/each}
 
@@ -21,7 +22,7 @@
 <input type="text" bind:value={newTaskName} placeholder="Configuración Eslint" />
 <label for="">Categoría</label>
 <input type="text" bind:value={categoryId} placeholder="Id de la categoría" />
-<button on:click={() => tasks.add({ name: newTaskName, categoryId })}>Agregar</button>
+<button on:click={() => createTask({ name: newTaskName, category: categoryId })}>Agregar</button>
 
 <style>
 	div.task-wrapper {

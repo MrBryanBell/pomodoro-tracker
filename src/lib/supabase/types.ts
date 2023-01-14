@@ -55,6 +55,29 @@ export interface Database {
 					user_id?: string | null;
 				};
 			};
+			tasks: {
+				Row: {
+					category: string;
+					created_at: string;
+					id: string;
+					name: string;
+					updated_at: string;
+				};
+				Insert: {
+					category: string;
+					created_at?: string;
+					id?: string;
+					name: string;
+					updated_at?: string;
+				};
+				Update: {
+					category?: string;
+					created_at?: string;
+					id?: string;
+					name?: string;
+					updated_at?: string;
+				};
+			};
 			users: {
 				Row: {
 					createdAt: string;

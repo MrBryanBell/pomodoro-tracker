@@ -1,8 +1,7 @@
-import { DateTime } from 'luxon';
-
-import type { Category } from '$classes/category';
-import type { CreateTaskProps } from '$lib/models/task';
-import { categoriesStore } from '$store/categories';
+/* eslint-disable camelcase */
+import { Category } from '$classes/category';
+import type { TaskFromSupabase } from '$lib/models/task';
+// import { categoriesStore } from '$store/categories';
 
 export class Task {
 	public readonly id: string;
@@ -11,11 +10,11 @@ export class Task {
 	public updatedAt: string;
 	public category: Category;
 
-	constructor({ name, categoryId }: CreateTaskProps) {
-		this.id = crypto.randomUUID();
+	constructor({ id, name, category, created_at, updated_at }: TaskFromSupabase) {
+		this.id = id;
 		this.name = name;
-		this.createdAt = DateTime.now().toISO();
-		this.updatedAt = DateTime.now().toISO();
-		this.category = categoriesStore.findById(categoryId);
+		this.createdAt = created_at;
+		this.updatedAt = updated_at;
+		this.category = new Category(category);
 	}
 }

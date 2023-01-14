@@ -2,7 +2,7 @@ import { get } from 'svelte/store';
 
 import { TasksStore } from '$classes/custom-stores/tasks-store';
 import { Task } from '$classes/task';
-import type { CreateTaskProps } from '$models/task';
+import type { TaskFromSupabase } from '$models/task';
 import { categoriesStore as categories } from '$store/categories';
 
 let tasks: TasksStore;
@@ -36,7 +36,7 @@ it('should return all tasks', () => {
 });
 
 it('should add a task', () => {
-	const newTaskProps: CreateTaskProps = {
+	const newTaskProps: TaskFromSupabase = {
 		name: 'Crear una API Rest de libros',
 		categoryId: 'abc'
 	};

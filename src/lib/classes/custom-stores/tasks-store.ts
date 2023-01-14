@@ -1,7 +1,14 @@
-import { derived, get, writable } from 'svelte/store';
+// Important:
+// This store is not an array of tasks, but an object with two properties:
+// The current Task (current) and all other tasks (all).
+
+/* eslint-disable @typescript-eslint/unbound-method */
+/* eslint-disable camelcase */
+import { type Subscriber, derived, get, writable } from 'svelte/store';
 
 import { Task } from '$classes/task';
-import type { CreateTaskProps } from '$models/task';
+import type { TaskFromSupabase } from '$models/task';
+import { TasksService } from '$services/supabase/tasks';
 
 interface TasksStoreConfig {
 	current: Task | null;
@@ -18,17 +25,36 @@ export class TasksStore {
 			current: null,
 			all: []
 		};
-		const { subscribe, update, set } = writable<TasksStoreConfig>(init);
+		const { subscribe, update, set } = writable<TasksStoreConfig>(init, this.start);
 		this.subscribe = subscribe;
 		this.update = update;
 		this.set = set;
+	}
+
+	start(set: Subscriber<TasksStoreConfig>) {
+		TasksService.getAll()
+			.then((tasks) => {
+				// this should be replaced with parseTasksFromSupabase()
+				// but it's not working for some reason (unknown)
+				// it-should-be: const t = this.parseTasksFromSupabase(tasks);
+				const t = tasks.map(
+					({ id, name, category, created_at, updated_at }) =>
+						new Task({ id, name, category, created_at, updated_at })
+				);
+				const taskStoreConfig: TasksStoreConfig = {
+					current: null,
+					all: t
+				};
+				set(taskStoreConfig);
+			})
+			.catch((error) => console.error(error));
 	}
 
 	get all$() {
 		return derived(this, (tasks) => tasks.all);
 	}
 
-	add(task: CreateTaskProps) {
+	add(task: TaskFromSupabase) {
 		const newTask = new Task(task);
 		this.update((tasks) => {
 			tasks.all.push(newTask);
@@ -54,6 +80,16 @@ export class TasksStore {
 
 			return tasks;
 		});
+	}
+
+	parseTasksFromSupabase(tasks: TaskFromSupabase[]) {
+		const parsedTasks = tasks.map(
+			({ id, name, category, created_at, updated_at }) =>
+				new Task({ id, name, category, created_at, updated_at })
+		);
+		console.log(parsedTasks);
+
+		return parsedTasks;
 	}
 
 	private findById(taskId: string) {

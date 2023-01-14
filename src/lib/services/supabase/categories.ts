@@ -5,10 +5,8 @@ import supabase from '$lib/supabase/client';
 // type CategoryProps = Database['public']['Tables']['categories']['Insert'];
 
 export class CategoriesService {
-	private static readonly client = supabase;
-
 	static async getAll() {
-		const { data, error } = await this.client.from('categories').select('*');
+		const { data, error } = await supabase.from('categories').select('*');
 
 		if (data === null) throw new Error(error.message);
 
@@ -16,18 +14,14 @@ export class CategoriesService {
 	}
 
 	static async create({ name }: CreateCategoryProps) {
-		const { data, error } = await this.client
-			.from('categories')
-			.insert({ name })
-			.select('*')
-			.single();
+		const { data, error } = await supabase.from('categories').insert({ name }).select('*').single();
 		if (data === null) throw new Error(error.message);
 
 		return data;
 	}
 
 	static async delete(id: string) {
-		const { data, error } = await this.client
+		const { data, error } = await supabase
 			.from('categories')
 			.delete()
 			.match({ id })
