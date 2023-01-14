@@ -1,12 +1,8 @@
 <script lang="ts">
-	import { createCategory } from '$services/memory/categories';
+	import { createCategory, deleteCategory } from '$services/memory/categories';
 	import { categoriesStore as categories } from '$store/categories';
 
 	let newCategoryName = '';
-
-	function deleteCategory(id: string) {
-		$categories = $categories.filter((category) => category.id !== id);
-	}
 </script>
 
 <h1>Categorías</h1>
