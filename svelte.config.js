@@ -15,7 +15,8 @@ const config = {
 			$models: "src/lib/models",
 			$store: "src/lib/store",
 			$icons: "src/lib/icons",
-			$classes: "src/lib/models/classes"
+			$services: "src/lib/services",
+			$classes: "src/lib/classes"
 		}
 	}
 };

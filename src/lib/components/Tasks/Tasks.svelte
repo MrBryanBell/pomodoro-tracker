@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { tasks } from '$store/tasks';
+	import { tasksStore as tasks } from '$store/tasks';
 
 	let newTaskName = '';
 	let categoryId = '';

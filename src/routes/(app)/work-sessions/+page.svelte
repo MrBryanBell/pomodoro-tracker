@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { workSessions } from '$store/work-sessions';
+	import { workSessionsStore as workSessions } from '$store/work-sessions';
 
 	const sessions = workSessions.all$;
 </script>

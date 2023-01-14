@@ -3,11 +3,10 @@ import type { Options as NotificationOptions } from '@tauri-apps/api/notificatio
 import { DateTime } from 'luxon';
 import { derived, get, writable } from 'svelte/store';
 
-import { workSessions } from '$lib/store/work-sessions';
+import type { CreateWorkSessionProps } from '$models/work-session';
 import { clock } from '$store/clock';
-import { tasks } from '$store/tasks';
-
-import type { WorkSessionObject } from '../work-session';
+import { tasksStore } from '$store/tasks';
+import { workSessionsStore } from '$store/work-sessions';
 
 export interface TimerSettings {
 	durationInMinutes: number;
@@ -20,7 +19,7 @@ interface TimerState {
 	isPaused: boolean;
 }
 
-export class Timer {
+export class TimerStore {
 	public subscribe;
 	private readonly update;
 	private readonly set;
@@ -171,17 +170,17 @@ export class Timer {
 	}
 
 	private addNewWorkSession() {
-		const task = get(tasks).current;
+		const task = get(tasksStore).current;
 		if (!task) {
 			throw new Error('No task selected');
 		}
-		const workSessionProps: WorkSessionObject = {
+		const workSessionProps: CreateWorkSessionProps = {
 			startTimeInISO: get(this).startedTime.toISO(),
 			durationInMinutes: get(this.elapsedTimeInMinutes$),
 			endTimeInISO: DateTime.now().toISO(),
 			task
 		};
 
-		workSessions.add(workSessionProps);
+		workSessionsStore.add(workSessionProps);
 	}
 }

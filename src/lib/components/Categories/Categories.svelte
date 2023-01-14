@@ -1,12 +1,8 @@
 <script lang="ts">
-	import { categories } from '$store/categories';
-	import { Category } from '$models/classes/category';
+	import { createCategory } from '$services/memory/categories';
+	import { categoriesStore as categories } from '$store/categories';
 
 	let newCategoryName = '';
-	function addCategory() {
-		const newCategory = new Category({ name: newCategoryName });
-		$categories = [...$categories, newCategory];
-	}
 
 	function deleteCategory(id: string) {
 		$categories = $categories.filter((category) => category.id !== id);
@@ -23,7 +19,7 @@
 
 <h3>Agregar una nueva categoría</h3>
 <input type="text" bind:value={newCategoryName} />
-<button on:click={addCategory}>Agregar</button>
+<button on:click={() => createCategory(newCategoryName)}>Agregar</button>
 
 <style>
 	div.category-wrapper {

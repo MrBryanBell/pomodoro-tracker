@@ -1,3 +1,3 @@
-import { Tasks } from '$models/classes/custom-stores/tasks';
+import { TasksStore } from '$classes/custom-stores/tasks-store';
 
-export const tasks = new Tasks();
+export const tasksStore = new TasksStore();

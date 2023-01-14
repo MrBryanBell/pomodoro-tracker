@@ -2,8 +2,8 @@
 	import Timer from '$components/Timer/Timer.svelte';
 	import Widget from '$components/Widget/Widget.svelte';
 	import Value from '$lib/components/Widget/Value.svelte';
-	import { workSessions } from '$lib/store/work-sessions';
-	import { tasks } from '$store/tasks';
+	import { workSessionsStore as workSessions } from '$store/work-sessions';
+	import { tasksStore as tasks } from '$store/tasks';
 
 	const allWorkSessionsToday = workSessions.allFromToday$;
 	const totalTimeFromToday = workSessions.totalTimeFromTodayInHours$;

@@ -9,18 +9,21 @@ export interface Database {
 					id: string;
 					name: string;
 					updatedAt: string;
+					user_id: string;
 				};
 				Insert: {
 					createdAt?: string;
 					id?: string;
 					name: string;
 					updatedAt?: string;
+					user_id?: string;
 				};
 				Update: {
 					createdAt?: string;
 					id?: string;
 					name?: string;
 					updatedAt?: string;
+					user_id?: string;
 				};
 			};
 			cities: {
@@ -28,22 +31,45 @@ export interface Database {
 					country: string;
 					createdAt: string | null;
 					id: number;
+					is_public: boolean;
 					isCapital: boolean;
 					name: string;
+					user_id: string | null;
 				};
 				Insert: {
 					country: string;
 					createdAt?: string | null;
 					id?: number;
+					is_public?: boolean;
 					isCapital: boolean;
 					name: string;
+					user_id?: string | null;
 				};
 				Update: {
 					country?: string;
 					createdAt?: string | null;
 					id?: number;
+					is_public?: boolean;
 					isCapital?: boolean;
 					name?: string;
+					user_id?: string | null;
+				};
+			};
+			users: {
+				Row: {
+					createdAt: string;
+					email: string;
+					id: string;
+				};
+				Insert: {
+					createdAt?: string;
+					email: string;
+					id: string;
+				};
+				Update: {
+					createdAt?: string;
+					email?: string;
+					id?: string;
 				};
 			};
 		};

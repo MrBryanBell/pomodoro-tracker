@@ -1,8 +1,10 @@
 import { derived, get, writable } from 'svelte/store';
 
-import { type WorkSessionObject, WorkSession } from '../work-session';
+import type { CreateWorkSessionProps } from '$models/work-session';
 
-export class WorkSessions {
+import { WorkSession } from '../work-session';
+
+export class WorkSessionsStore {
 	public readonly subscribe;
 	private readonly update;
 	private readonly set;
@@ -47,7 +49,7 @@ export class WorkSessions {
 		});
 	}
 
-	add(workSessionObject: WorkSessionObject) {
+	add(workSessionObject: CreateWorkSessionProps) {
 		const newWorkSession = new WorkSession(workSessionObject);
 		this.update((sessions) => [...sessions, newWorkSession]);
 

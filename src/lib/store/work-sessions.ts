@@ -1,3 +1,3 @@
-import { WorkSessions } from '$classes/custom-stores/work-sessions';
+import { WorkSessionsStore } from '$lib/classes/custom-stores/work-sessions-store';
 
-export const workSessions = new WorkSessions();
+export const workSessionsStore = new WorkSessionsStore();

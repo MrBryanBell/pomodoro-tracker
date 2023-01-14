@@ -1,13 +1,14 @@
 import { derived, get, writable } from 'svelte/store';
 
-import { type TaskProps, Task } from '../task';
+import { Task } from '$classes/task';
+import type { CreateTaskProps } from '$models/task';
 
 interface TasksStoreConfig {
 	current: Task | null;
 	all: Task[];
 }
 
-export class Tasks {
+export class TasksStore {
 	public subscribe;
 	private readonly update;
 	private readonly set;
@@ -27,7 +28,7 @@ export class Tasks {
 		return derived(this, (tasks) => tasks.all);
 	}
 
-	add(task: TaskProps) {
+	add(task: CreateTaskProps) {
 		const newTask = new Task(task);
 		this.update((tasks) => {
 			tasks.all.push(newTask);

@@ -1,3 +1,3 @@
-import { Categories } from '$models/classes/custom-stores/categories';
+import { CategoriesStore } from '$lib/classes/custom-stores/categories-store';
 
-export const categories = new Categories();
+export const categoriesStore = new CategoriesStore();

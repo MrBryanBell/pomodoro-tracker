@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { timer } from '$store/timer';
+	import { timerStore as timer } from '$store/timer';
 	import Categories from '$components/Categories/Categories.svelte';
 	import Tasks from '$components/Tasks/Tasks.svelte';
 

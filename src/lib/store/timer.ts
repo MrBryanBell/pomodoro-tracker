@@ -1,4 +1,4 @@
-import { type TimerSettings, Timer } from '$models/classes/custom-stores/timer';
+import { type TimerSettings, TimerStore } from '$lib/classes/custom-stores/timer-store';
 
 const timerSettings: TimerSettings = { durationInMinutes: 25 };
-export const timer = new Timer(timerSettings);
+export const timerStore = new TimerStore(timerSettings);

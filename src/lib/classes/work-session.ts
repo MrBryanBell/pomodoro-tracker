@@ -1,14 +1,5 @@
-import type { Task } from './task';
-
-interface IWorkSession {
-	id: number;
-	startTimeInISO: string;
-	endTimeInISO: string;
-	durationInMinutes: number;
-	task: Task;
-}
-
-export type WorkSessionObject = Omit<IWorkSession, 'id'>;
+import type { Task } from '$classes/task';
+import type { CreateWorkSessionProps } from '$models/work-session';
 
 export class WorkSession {
 	public id: string;
@@ -17,7 +8,7 @@ export class WorkSession {
 	public durationInMinutes: number;
 	public task: Task;
 
-	constructor({ startTimeInISO, endTimeInISO, durationInMinutes, task }: WorkSessionObject) {
+	constructor({ startTimeInISO, endTimeInISO, durationInMinutes, task }: CreateWorkSessionProps) {
 		this.id = crypto.randomUUID();
 		this.startTimeInISO = startTimeInISO;
 		this.endTimeInISO = endTimeInISO;

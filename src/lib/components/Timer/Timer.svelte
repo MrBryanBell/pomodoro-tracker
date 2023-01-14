@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { timer } from '$store/timer';
+	import { timerStore as timer } from '$store/timer';
 	import { Button, CountDown, EndTime, Name } from './tokens';
-	import { tasks } from '$store/tasks';
+	import { tasksStore as tasks } from '$store/tasks';
 
 	const timeLeftInMinutes = timer.timeLeftInMinutes$;
 	const formattedEndTime = timer.formattedEndTime$;
