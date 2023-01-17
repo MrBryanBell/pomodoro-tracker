@@ -22,7 +22,7 @@
 <input type="text" bind:value={newTaskName} placeholder="Configuración Eslint" />
 <label for="">Categoría</label>
 <input type="text" bind:value={categoryId} placeholder="Id de la categoría" />
-<button on:click={() => createTask({ name: newTaskName, category: categoryId })}>Agregar</button>
+<button on:click={() => createTask({ name: newTaskName, categoryId })}>Agregar</button>
 
 <style>
 	div.task-wrapper {

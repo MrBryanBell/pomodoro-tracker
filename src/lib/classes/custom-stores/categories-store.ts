@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { type Subscriber, derived, get, writable } from 'svelte/store';
+import { derived, get, writable } from 'svelte/store';
 
-import { CategoriesService } from '$lib/services/supabase/categories';
-import type { CategoryObject } from '$models/category';
+import { CategoriesHTTPService } from '$lib/services/supabase/categories';
+import type { CategoryFromSupabase } from '$models/category';
 
 import { Category } from '../category';
 
@@ -12,47 +12,42 @@ export class CategoriesStore {
 	private readonly set;
 
 	constructor() {
-		const { subscribe, update, set } = writable<Category[]>([], this.start);
+		const { subscribe, update, set } = writable<Category[]>([]);
 		this.subscribe = subscribe;
 		this.update = update;
 		this.set = set;
 	}
 
-	start(set: Subscriber<Category[]>) {
-		CategoriesService.getAll()
-			.then((categories) => {
-				const c = categories.map((category) => new Category(category));
-				set(c);
-			})
-			.catch((error) => console.error(error));
+	async init() {
+		const { data, error, status } = await CategoriesHTTPService.getAll();
+		if (data === null) {
+			console.error(status);
+			throw new Error(error?.message);
+		}
 
-		return function stop() {
-			console.log('Todos Store Stopped');
-		};
+		const categories = data.map((category) => new Category(category));
+		this.set(categories);
 	}
 
 	get all$() {
 		return derived(this, (categories) => categories);
 	}
 
-	// TODO: This could be typed from supabase types
-	add(category: CategoryObject) {
+	add(category: CategoryFromSupabase) {
 		const newCategory = new Category(category);
-		this.update((categories) => {
-			return [...categories, newCategory];
-		});
+		this.update((categories) => [...categories, newCategory]);
 
 		return newCategory;
 	}
 
-	delete(categoryId: string) {
+	delete(id: string) {
 		this.update((categories) => {
-			return categories.filter((category) => category.id !== categoryId);
+			return categories.filter((category) => category.id !== id);
 		});
 	}
 
-	findById(categoryId: string) {
-		const result = get(this).find((category) => category.id === categoryId);
+	findById(id: string) {
+		const result = get(this).find((category) => category.id === id);
 		if (!result) {
 			throw new Error('Category not found');
 		}

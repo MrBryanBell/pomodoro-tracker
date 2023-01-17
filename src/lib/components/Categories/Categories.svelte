@@ -15,7 +15,11 @@
 
 <h3>Agregar una nueva categoría</h3>
 <input type="text" bind:value={newCategoryName} />
-<button on:click={() => createCategory(newCategoryName)}>Agregar</button>
+<button
+	on:click={() =>
+		createCategory({ name: newCategoryName, userId: '79a19101-9660-4e91-9f1d-d648d9f9ad42' })}
+	>Agregar</button
+>
 
 <style>
 	div.category-wrapper {

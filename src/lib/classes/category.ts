@@ -1,6 +1,4 @@
-import { DateTime } from 'luxon';
-
-import type { CreateCategoryProps } from '$models/category';
+import type { CategoryFromSupabase } from '$models/category';
 
 export class Category {
 	public readonly id: string;
@@ -8,10 +6,10 @@ export class Category {
 	public readonly createdAt: string;
 	public updatedAt: string;
 
-	constructor({ id, name }: CreateCategoryProps) {
-		this.id = id ?? crypto.randomUUID();
+	constructor({ id, name, createdAt, updatedAt }: CategoryFromSupabase) {
+		this.id = id;
 		this.name = name;
-		this.createdAt = DateTime.now().toISO();
-		this.updatedAt = DateTime.now().toISO();
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
 	}
 }

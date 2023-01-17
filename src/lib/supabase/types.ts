@@ -9,73 +9,47 @@ export interface Database {
 					id: string;
 					name: string;
 					updatedAt: string;
-					user_id: string;
+					userId: string;
 				};
 				Insert: {
 					createdAt?: string;
 					id?: string;
 					name: string;
 					updatedAt?: string;
-					user_id?: string;
+					userId?: string;
 				};
 				Update: {
 					createdAt?: string;
 					id?: string;
 					name?: string;
 					updatedAt?: string;
-					user_id?: string;
+					userId?: string;
 				};
 			};
-			cities: {
+			'frequent-tasks': {
 				Row: {
-					country: string;
-					createdAt: string | null;
-					id: number;
-					is_public: boolean;
-					isCapital: boolean;
-					name: string;
-					user_id: string | null;
-				};
-				Insert: {
-					country: string;
-					createdAt?: string | null;
-					id?: number;
-					is_public?: boolean;
-					isCapital: boolean;
-					name: string;
-					user_id?: string | null;
-				};
-				Update: {
-					country?: string;
-					createdAt?: string | null;
-					id?: number;
-					is_public?: boolean;
-					isCapital?: boolean;
-					name?: string;
-					user_id?: string | null;
-				};
-			};
-			tasks: {
-				Row: {
-					category: string;
-					created_at: string;
+					categoryId: string;
+					createdAt: string;
 					id: string;
 					name: string;
-					updated_at: string;
+					updatedAt: string;
+					userId: string;
 				};
 				Insert: {
-					category: string;
-					created_at?: string;
+					categoryId: string;
+					createdAt?: string;
 					id?: string;
 					name: string;
-					updated_at?: string;
+					updatedAt?: string;
+					userId?: string;
 				};
 				Update: {
-					category?: string;
-					created_at?: string;
+					categoryId?: string;
+					createdAt?: string;
 					id?: string;
 					name?: string;
-					updated_at?: string;
+					updatedAt?: string;
+					userId?: string;
 				};
 			};
 			users: {
@@ -83,16 +57,54 @@ export interface Database {
 					createdAt: string;
 					email: string;
 					id: string;
+					updatedAt: string;
 				};
 				Insert: {
 					createdAt?: string;
 					email: string;
 					id: string;
+					updatedAt?: string;
 				};
 				Update: {
 					createdAt?: string;
 					email?: string;
 					id?: string;
+					updatedAt?: string;
+				};
+			};
+			'work-sessions': {
+				Row: {
+					categoryId: string;
+					createdAt: string;
+					durationInMinutes: number;
+					endTimeInISO: string;
+					id: string;
+					startedTimeInISO: string;
+					taskId: string;
+					updatedAt: string;
+					userId: string;
+				};
+				Insert: {
+					categoryId: string;
+					createdAt?: string;
+					durationInMinutes: number;
+					endTimeInISO: string;
+					id?: string;
+					startedTimeInISO: string;
+					taskId: string;
+					updatedAt?: string;
+					userId?: string;
+				};
+				Update: {
+					categoryId?: string;
+					createdAt?: string;
+					durationInMinutes?: number;
+					endTimeInISO?: string;
+					id?: string;
+					startedTimeInISO?: string;
+					taskId?: string;
+					updatedAt?: string;
+					userId?: string;
 				};
 			};
 		};

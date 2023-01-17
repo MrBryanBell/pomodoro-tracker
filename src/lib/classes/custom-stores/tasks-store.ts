@@ -1,15 +1,16 @@
-// Important:
-// This store is not an array of tasks, but an object with two properties:
-// The current Task (current) and all other tasks (all).
+// IMPORTANT:
+// This store is not an array of tasks, is an object with two properties:
+// 1. The current Task (current)
+// 2. All tasks.
 
-/* eslint-disable @typescript-eslint/unbound-method */
-/* eslint-disable camelcase */
-import { type Subscriber, derived, get, writable } from 'svelte/store';
+import { derived, get, writable } from 'svelte/store';
 
 import { Task } from '$classes/task';
 import type { TaskFromSupabase } from '$models/task';
-import { TasksService } from '$services/supabase/tasks';
+import { TasksHTTPService } from '$services/supabase/tasks';
 
+// TODO: add optional property: defaultTask
+// in case there is no current task, but user wants to start a new work session
 interface TasksStoreConfig {
 	current: Task | null;
 	all: Task[];
@@ -20,38 +21,45 @@ export class TasksStore {
 	private readonly update;
 	private readonly set;
 
+	// TODO: delete current task from here: move it to timer-custom-store
 	constructor() {
 		const init: TasksStoreConfig = {
 			current: null,
 			all: []
 		};
-		const { subscribe, update, set } = writable<TasksStoreConfig>(init, this.start);
+		const { subscribe, update, set } = writable<TasksStoreConfig>(init);
 		this.subscribe = subscribe;
 		this.update = update;
 		this.set = set;
 	}
 
-	start(set: Subscriber<TasksStoreConfig>) {
-		TasksService.getAll()
-			.then((tasks) => {
-				// this should be replaced with parseTasksFromSupabase()
-				// but it's not working for some reason (unknown)
-				// it-should-be: const t = this.parseTasksFromSupabase(tasks);
-				const t = tasks.map(
-					({ id, name, category, created_at, updated_at }) =>
-						new Task({ id, name, category, created_at, updated_at })
-				);
-				const taskStoreConfig: TasksStoreConfig = {
-					current: null,
-					all: t
-				};
-				set(taskStoreConfig);
-			})
-			.catch((error) => console.error(error));
+	async init() {
+		const { data, error, status } = await TasksHTTPService.getAll();
+
+		if (data === null) {
+			console.error(status);
+			throw new Error(error?.message);
+		}
+
+		const tasks = data.map((task) => new Task(task));
+		const taskStoreConfig: TasksStoreConfig = {
+			current: null,
+			all: tasks
+		};
+		this.set(taskStoreConfig);
 	}
 
 	get all$() {
 		return derived(this, (tasks) => tasks.all);
+	}
+
+	get current() {
+		const currentTask = get(this).current;
+		if (!currentTask) {
+			throw new Error('No current task');
+		}
+
+		return currentTask;
 	}
 
 	add(task: TaskFromSupabase) {
@@ -65,9 +73,9 @@ export class TasksStore {
 		return newTask;
 	}
 
-	delete(taskId: string) {
+	delete(id: string) {
 		this.update((tasks) => {
-			tasks.all = tasks.all.filter((task) => task.id !== taskId);
+			tasks.all = tasks.all.filter((task) => task.id !== id);
 
 			return tasks;
 		});
@@ -80,16 +88,6 @@ export class TasksStore {
 
 			return tasks;
 		});
-	}
-
-	parseTasksFromSupabase(tasks: TaskFromSupabase[]) {
-		const parsedTasks = tasks.map(
-			({ id, name, category, created_at, updated_at }) =>
-				new Task({ id, name, category, created_at, updated_at })
-		);
-		console.log(parsedTasks);
-
-		return parsedTasks;
 	}
 
 	private findById(taskId: string) {

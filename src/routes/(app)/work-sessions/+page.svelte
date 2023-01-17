@@ -6,13 +6,13 @@
 
 <a href="/home">Go back to Home</a>
 
-{#each $sessions as { id, startTimeInISO, endTimeInISO, durationInMinutes, task }}
+{#each $sessions as { id, startedTimeInISO, endTimeInISO, durationInMinutes, task, category }}
 	<div>
 		<p>{id}</p>
-		<p>{startTimeInISO}</p>
+		<p>{startedTimeInISO}</p>
 		<p>{endTimeInISO}</p>
 		<p>{durationInMinutes}</p>
-		<p>{task.name} // {task.category.name}</p>
+		<p>{task.name} // {category.name}</p>
 		<button on:click={() => workSessions.delete(id)}>delete</button>
 	</div>
 {:else}

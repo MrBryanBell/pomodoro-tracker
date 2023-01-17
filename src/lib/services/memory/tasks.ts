@@ -1,13 +1,19 @@
-import type { CreateTaskInSupabase } from '$models/task';
-import { TasksService } from '$services/supabase/tasks';
+import type { CreateTaskProps } from '$models/task';
+import { TasksHTTPService } from '$services/supabase/tasks';
 import { tasksStore } from '$store/tasks';
 
-export async function createTask({ name, category }: CreateTaskInSupabase) {
-	const newTask = await TasksService.create({ name, category });
-	tasksStore.add(newTask);
+export async function createTask(taskProps: CreateTaskProps) {
+	const { data: createdTask } = await TasksHTTPService.create(taskProps);
+	if (!createdTask) {
+		throw new Error('Could not create task');
+	}
+	tasksStore.add(createdTask);
 }
 
 export async function deleteTask(id: string) {
-	await TasksService.delete(id);
+	const { status } = await TasksHTTPService.delete(id);
+	if (status !== 200) {
+		throw new Error('Could not delete task');
+	}
 	tasksStore.delete(id);
 }

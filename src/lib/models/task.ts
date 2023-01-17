@@ -1,28 +1,29 @@
-// import type { Category } from '$classes/category';
 import type { Database } from '$lib/supabase/types';
+import type { ICategory } from '$models/category';
 
-// interface TaskObject {
-// 	id: number;
-// 	name: string;
-// 	createdAt: string;
-// 	updatedAt: string;
-// 	category: Category;
-// }
+export interface ITask {
+	id: string;
+	name: string;
+	createdAt: string;
+	updatedAt: string;
+	category: Pick<ICategory, 'id' | 'name'>;
+}
 
 // export interface CreateTaskProps extends Pick<TaskObject, 'name'> {
 // 	categoryId: string;
 // }
 
-// Types from supabase
-// Task Props represents TasksService.getAll() return type
-type TaskColumns = Database['public']['Tables']['tasks']['Row'];
-type CategoryColumns = Database['public']['Tables']['categories']['Row'];
 // .getAll() explicitly includes the category column
-export type TaskFromSupabase = Omit<TaskColumns, 'category'> & {
-	category: CategoryColumns;
+type TaskColumns = Database['public']['Tables']['frequent-tasks']['Row'];
+type CategoryColumns = Database['public']['Tables']['categories']['Row'];
+export type TaskFromSupabase = TaskColumns & {
+	categoryId: Pick<CategoryColumns, 'id' | 'name'>;
 };
 
-export type CreateTaskInSupabase = Database['public']['Tables']['tasks']['Insert'];
+export type CreateTaskProps = Database['public']['Tables']['frequent-tasks']['Insert'];
+
+// export type CreateTaskProps = Pick<ITask, 'name' | 'category'> &
+// 	Partial<Pick<ITask, 'id' | 'createdAt' | 'updatedAt'>>;
 
 // export type CreateTaskInSupabase = Omit<
 // 	Database['public']['Tables']['tasks']['Insert'],

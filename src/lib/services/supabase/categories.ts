@@ -1,35 +1,42 @@
-/* eslint-disable curly */
-import type { CreateCategoryProps } from '$lib/models/category';
+import type { PostgrestError } from '@supabase/supabase-js';
+
+import type { CategoryFromSupabase, CreateCategoryProps } from '$lib/models/category';
 import supabase from '$lib/supabase/client';
-// import type { Database } from '$lib/supabase/types';
-// type CategoryProps = Database['public']['Tables']['categories']['Insert'];
 
-export class CategoriesService {
+type returnObject<T> = {
+	data: T | null;
+	error: PostgrestError | null;
+	status: number;
+};
+
+export class CategoriesHTTPService {
+	static tableName = 'categories';
+	static getQuery = '*';
+
 	static async getAll() {
-		const { data, error } = await supabase.from('categories').select('*');
+		const { data, error, status } = await supabase.from(this.tableName).select(this.getQuery);
 
-		if (data === null) throw new Error(error.message);
-
-		return data;
+		return { data, error, status } as returnObject<CategoryFromSupabase[]>;
 	}
 
-	static async create({ name }: CreateCategoryProps) {
-		const { data, error } = await supabase.from('categories').insert({ name }).select('*').single();
-		if (data === null) throw new Error(error.message);
+	static async create(category: CreateCategoryProps) {
+		const { data, error, status } = await supabase
+			.from(this.tableName)
+			.insert(category)
+			.select(this.getQuery)
+			.single();
 
-		return data;
+		return { data, error, status } as returnObject<CategoryFromSupabase>;
 	}
 
 	static async delete(id: string) {
-		const { data, error } = await supabase
-			.from('categories')
+		const { data, error, status } = await supabase
+			.from(this.tableName)
 			.delete()
 			.match({ id })
-			.select('*')
+			.select(this.getQuery)
 			.single();
 
-		if (data === null) throw new Error(error.message);
-
-		return data;
+		return { data, error, status } as returnObject<CategoryFromSupabase>;
 	}
 }

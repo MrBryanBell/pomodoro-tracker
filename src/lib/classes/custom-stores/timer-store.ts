@@ -1,22 +1,27 @@
 /* eslint-disable @typescript-eslint/member-ordering */
-import type { Options as NotificationOptions } from '@tauri-apps/api/notification';
 import { DateTime } from 'luxon';
 import { derived, get, writable } from 'svelte/store';
 
-import type { CreateWorkSessionProps } from '$models/work-session';
 import { clock } from '$store/clock';
-import { tasksStore } from '$store/tasks';
-import { workSessionsStore } from '$store/work-sessions';
 
-export interface TimerSettings {
+// The object the store will hold
+// TODO: add type for onFinish and onStart: code is duplicated
+export interface TimerState {
 	durationInMinutes: number;
-}
-
-interface TimerState {
-	durationInMinutes: number;
+	environment: 'development' | 'production' | 'test';
 	startedTime: DateTime;
 	timeLeftInSeconds: number;
 	isPaused: boolean;
+	onStart?: () => void;
+	onFinish?: (timerState: TimerState) => void;
+}
+
+// The object that will be passed to the constructor
+export interface TimerSettings {
+	durationInMinutes: number;
+	environment: 'development' | 'production' | 'test';
+	onStart?: () => void;
+	onFinish?: (timerState: TimerState) => void;
 }
 
 export class TimerStore {
@@ -25,9 +30,11 @@ export class TimerStore {
 	private readonly set;
 	private interval: null | ReturnType<typeof setInterval> = null;
 
-	constructor({ durationInMinutes }: TimerSettings) {
+	constructor({ durationInMinutes, environment, onFinish }: TimerSettings) {
 		const init: TimerState = {
 			durationInMinutes,
+			environment,
+			onFinish,
 			startedTime: DateTime.now(),
 			timeLeftInSeconds: durationInMinutes * 60,
 			isPaused: true
@@ -64,25 +71,15 @@ export class TimerStore {
 
 	private finish() {
 		this.pause();
-		this.addNewWorkSession();
-		const notificationConfig: NotificationOptions = {
-			title: 'Sesión de trabajo finalizada',
-			body: '¡Bien hecho!'
-		};
 
-		import('@tauri-apps/api/notification')
-			.then(({ sendNotification }) => sendNotification(notificationConfig))
-			.catch((error) => {
-				console.error(error);
-			});
+		const onFinishCallback = get(this).onFinish;
+		if (onFinishCallback) {
+			onFinishCallback(get(this));
+		}
 	}
 
 	private clear() {
-		this.update((timer) => {
-			// timer.startedTime = null;
-
-			return timer;
-		});
+		// timer.startedTime = null;
 		this.interval = null;
 	}
 
@@ -98,8 +95,7 @@ export class TimerStore {
 		}
 	}
 
-	// needs: decreaseTimeLeft, finish, clear
-	// move interval to a separate method
+	// TODO: move interval to a separate method
 	start() {
 		const timeLeftInSeconds = get(this).timeLeftInSeconds;
 		if (timeLeftInSeconds === 0) {
@@ -121,16 +117,10 @@ export class TimerStore {
 			}
 		}, 1000);
 
-		const notificationConfig: NotificationOptions = {
-			title: 'Sesión de trabajo iniciada',
-			body: 'Aprovecha el momento'
-		};
-
-		import('@tauri-apps/api/notification')
-			.then(({ sendNotification }) => sendNotification(notificationConfig))
-			.catch((error) => {
-				console.error(error);
-			});
+		const onStartCallback = get(this).onStart;
+		if (onStartCallback) {
+			onStartCallback();
+		}
 	}
 
 	restart() {
@@ -167,20 +157,5 @@ export class TimerStore {
 
 			return Math.round(elapsedTimeInMinutes * 10) / 10;
 		});
-	}
-
-	private addNewWorkSession() {
-		const task = get(tasksStore).current;
-		if (!task) {
-			throw new Error('No task selected');
-		}
-		const workSessionProps: CreateWorkSessionProps = {
-			startTimeInISO: get(this).startedTime.toISO(),
-			durationInMinutes: get(this.elapsedTimeInMinutes$),
-			endTimeInISO: DateTime.now().toISO(),
-			task
-		};
-
-		workSessionsStore.add(workSessionProps);
 	}
 }

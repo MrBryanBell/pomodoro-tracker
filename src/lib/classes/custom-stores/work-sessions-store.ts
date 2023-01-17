@@ -1,8 +1,8 @@
 import { derived, get, writable } from 'svelte/store';
 
-import type { CreateWorkSessionProps } from '$models/work-session';
-
-import { WorkSession } from '../work-session';
+import { WorkSession } from '$classes/work-session';
+import type { WorkSessionsFromSupabase } from '$models/work-session';
+import { WorkSessionsHTTPService } from '$services/supabase/work-sessions';
 
 export class WorkSessionsStore {
 	public readonly subscribe;
@@ -16,7 +16,45 @@ export class WorkSessionsStore {
 		this.set = set;
 	}
 
-	// this could eventually be get all({ fromToday: true }})
+	async init() {
+		const { data, error, status } = await WorkSessionsHTTPService.getAll();
+
+		if (data === null) {
+			console.error(status);
+			throw new Error(error?.message);
+		}
+
+		const workSessions = data.map((workSession) => new WorkSession(workSession));
+
+		this.set(workSessions);
+	}
+
+	findById(id: string) {
+		const session = get(this).find((session) => session.id === id);
+
+		return session;
+	}
+
+	add(workSessionObject: WorkSessionsFromSupabase) {
+		const newWorkSession = new WorkSession(workSessionObject);
+		this.update((sessions) => [...sessions, newWorkSession]);
+
+		return newWorkSession;
+	}
+
+	delete(id: string) {
+		const session = this.findById(id);
+		if (!session) {
+			throw new Error(`Session with id ${id} not found`);
+		}
+
+		this.update((sessions) => sessions.filter((session) => session.id !== id));
+
+		return session;
+	}
+
+	// TODO: this could eventually accept queries
+	// for example: be get all({ fromToday: true }})
 	get all$() {
 		return derived(this, (workSessions) => workSessions);
 	}
@@ -47,27 +85,5 @@ export class WorkSessionsStore {
 
 			return Math.floor(timeInHours * 10) / 10;
 		});
-	}
-
-	add(workSessionObject: CreateWorkSessionProps) {
-		const newWorkSession = new WorkSession(workSessionObject);
-		this.update((sessions) => [...sessions, newWorkSession]);
-
-		return newWorkSession;
-	}
-
-	findById(id: string) {
-		const session = get(this).find((session) => session.id === id);
-
-		return session;
-	}
-
-	delete(id: string) {
-		const session = this.findById(id);
-		if (!session) {
-			throw new Error(`Session with id ${id} not found`);
-		}
-
-		this.update((sessions) => sessions.filter((session) => session.id !== id));
 	}
 }

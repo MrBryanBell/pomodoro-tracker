@@ -1,20 +1,18 @@
-/* eslint-disable camelcase */
-import { Category } from '$classes/category';
 import type { TaskFromSupabase } from '$lib/models/task';
-// import { categoriesStore } from '$store/categories';
+import type { ICategory } from '$models/category';
 
 export class Task {
 	public readonly id: string;
 	public name: string;
 	public readonly createdAt: string;
 	public updatedAt: string;
-	public category: Category;
+	public category: Pick<ICategory, 'id' | 'name'>;
 
-	constructor({ id, name, category, created_at, updated_at }: TaskFromSupabase) {
+	constructor({ id, name, categoryId, createdAt, updatedAt }: TaskFromSupabase) {
 		this.id = id;
 		this.name = name;
-		this.createdAt = created_at;
-		this.updatedAt = updated_at;
-		this.category = new Category(category);
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
+		this.category = categoryId;
 	}
 }

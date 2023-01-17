@@ -12,7 +12,7 @@ beforeEach(() => {
 	workSessions = new WorkSessionsStore();
 	workSessionProps = {
 		durationInMinutes: 20,
-		startTimeInISO: '2023-01-05T03:42:46.458-06:00',
+		startedTimeInISO: '2023-01-05T03:42:46.458-06:00',
 		endTimeInISO: '2023-01-05T03:22:32.324-06:00',
 		task: new Task({ name: 'test task', categoryId: 'abc' })
 	};

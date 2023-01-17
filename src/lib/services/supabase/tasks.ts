@@ -1,34 +1,43 @@
+import type { PostgrestError } from '@supabase/supabase-js';
+
 import supabase from '$lib/supabase/client';
-import type { CreateTaskInSupabase, TaskFromSupabase } from '$models/task';
+import type { CreateTaskProps, TaskFromSupabase } from '$models/task';
 
-export class TasksService {
+type returnObject<T> = {
+	data: T | null;
+	error: PostgrestError | null;
+	status: number;
+};
+
+export class TasksHTTPService {
+	static tableName = 'frequent-tasks';
+	static getQuery = '*, categoryId(id, name)';
+
 	static async getAll() {
-		const { data, error } = await supabase.from('tasks').select('*, category(*)');
+		const { error, status, data } = await supabase.from(this.tableName).select(this.getQuery);
 
-		if (data === null) {
-			throw new Error(error.message);
-		}
-
-		return data as unknown as TaskFromSupabase[];
+		// this is a hack to get around the fact that supabase doesn't return the complete type (it's nested)
+		return { data, error, status } as returnObject<TaskFromSupabase[]>;
 	}
 
-	static async create({ name, category }: CreateTaskInSupabase) {
-		const { data, error } = await supabase
-			.from('tasks')
-			.insert({ name, category })
-			.select('*, category(*)')
+	static async create(taskProps: CreateTaskProps) {
+		const { data, error, status } = await supabase
+			.from(this.tableName)
+			.insert(taskProps)
+			.select(this.getQuery)
 			.single();
-		if (data === null) {
-			throw new Error(error.message);
-		}
 
-		return data as unknown as TaskFromSupabase;
+		return { data, error, status } as returnObject<TaskFromSupabase>;
 	}
 
 	static async delete(id: string) {
-		const { error } = await supabase.from('tasks').delete().match({ id });
-		if (error) {
-			throw new Error(error.message);
-		}
+		const { data, error, status } = await supabase
+			.from(this.tableName)
+			.delete()
+			.match({ id })
+			.select(this.getQuery)
+			.single();
+
+		return { data, error, status } as returnObject<TaskFromSupabase>;
 	}
 }

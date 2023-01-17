@@ -1,13 +1,22 @@
+import type { CreateCategoryProps } from '$models/category';
 import { categoriesStore } from '$store/categories';
 
-import { CategoriesService } from '../supabase/categories';
+import { CategoriesHTTPService } from '../supabase/categories';
 
-export async function createCategory(name: string) {
-	const newCategory = await CategoriesService.create({ name });
-	categoriesStore.add(newCategory);
+export async function createCategory(categoryProps: CreateCategoryProps) {
+	const { data: createdCategory, error } = await CategoriesHTTPService.create(categoryProps);
+
+	if (!createdCategory) {
+		console.error(error);
+		throw new Error('Could not create category');
+	}
+	categoriesStore.add(createdCategory);
 }
 
 export async function deleteCategory(id: string) {
-	await CategoriesService.delete(id);
+	const { status } = await CategoriesHTTPService.delete(id);
+	if (status !== 200) {
+		throw new Error('Could not delete task');
+	}
 	categoriesStore.delete(id);
 }
