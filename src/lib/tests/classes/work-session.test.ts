@@ -1,21 +1,26 @@
-import { Category } from '$classes/category';
-import { Task } from '$classes/task';
 import { WorkSession } from '$classes/work-session';
-import type { CreateWorkSessionProps } from '$models/work-session';
-import { categoriesStore as categories } from '$store/categories';
+import type { WorkSessionsFromSupabase } from '$models/work-session';
 
 describe('WorkSession', () => {
 	let workSession: WorkSession;
 
 	beforeEach(() => {
-		const newCategory = new Category({ name: 'Test Category', id: '1' });
-		categories.add(newCategory);
-		const newTask = new Task({ name: 'Test Task', categoryId: '1' });
-		const workSessionConfig: CreateWorkSessionProps = {
+		const workSessionConfig: WorkSessionsFromSupabase = {
+			id: '1',
+			startedTimeInISO: '2023-01-05T03:42:46.458-06:00',
+			categoryId: {
+				id: '1',
+				name: 'Test Category'
+			},
+			taskId: {
+				id: '1',
+				name: 'Test Task'
+			},
 			durationInMinutes: 20,
 			endTimeInISO: '2023-01-05T03:22:32.324-06:00',
-			startedTimeInISO: '2023-01-05T03:42:46.458-06:00',
-			task: newTask
+			userId: '1',
+			createdAt: '2023-01-05T03:42:46.458-06:00',
+			updatedAt: '2023-01-05T03:42:46.458-06:00'
 		};
 		workSession = new WorkSession(workSessionConfig);
 	});

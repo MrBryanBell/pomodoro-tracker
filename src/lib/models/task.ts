@@ -16,7 +16,7 @@ export interface ITask {
 // .getAll() explicitly includes the category column
 type TaskColumns = Database['public']['Tables']['frequent-tasks']['Row'];
 type CategoryColumns = Database['public']['Tables']['categories']['Row'];
-export type TaskFromSupabase = TaskColumns & {
+export type TaskFromSupabase = Omit<TaskColumns, 'categoryId'> & {
 	categoryId: Pick<CategoryColumns, 'id' | 'name'>;
 };
 

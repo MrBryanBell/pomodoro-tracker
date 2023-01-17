@@ -1,12 +1,11 @@
 import { get } from 'svelte/store';
 
 import { WorkSessionsStore } from '$classes/custom-stores/work-sessions-store';
-import { Task } from '$classes/task';
 import { WorkSession } from '$classes/work-session';
-import type { CreateWorkSessionProps } from '$models/work-session';
+import type { WorkSessionsFromSupabase } from '$models/work-session';
 
 let workSessions: WorkSessionsStore;
-let workSessionProps: CreateWorkSessionProps;
+let workSessionProps: WorkSessionsFromSupabase;
 
 beforeEach(() => {
 	workSessions = new WorkSessionsStore();
@@ -14,7 +13,18 @@ beforeEach(() => {
 		durationInMinutes: 20,
 		startedTimeInISO: '2023-01-05T03:42:46.458-06:00',
 		endTimeInISO: '2023-01-05T03:22:32.324-06:00',
-		task: new Task({ name: 'test task', categoryId: 'abc' })
+		categoryId: {
+			id: '1',
+			name: 'Test Category'
+		},
+		taskId: {
+			id: '1',
+			name: 'Test Task'
+		},
+		userId: '1',
+		createdAt: '2023-01-05T03:42:46.458-06:00',
+		updatedAt: '2023-01-05T03:42:46.458-06:00',
+		id: '1'
 	};
 });
 

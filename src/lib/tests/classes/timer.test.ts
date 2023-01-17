@@ -4,22 +4,15 @@ import { vi } from 'vitest';
 
 import type { TimerSettings } from '$lib/classes/custom-stores/timer-store';
 import { TimerStore as Timer } from '$lib/classes/custom-stores/timer-store';
-import { categoriesStore as categories } from '$store/categories';
-import { tasksStore as tasks } from '$store/tasks';
 
 describe('Timer', () => {
 	let timer: Timer;
-	categories.add({
-		name: 'Eslint',
-		id: '1',
-		updatedAt: DateTime.now().toISO(),
-		createdAt: DateTime.now().toISO()
-	});
-	const { name: newTaskName } = tasks.add({ name: 'Configuración Eslint', categoryId: '1' });
-	tasks.setCurrentByName(newTaskName);
 
 	beforeEach(() => {
-		const timerSettings: TimerSettings = { durationInMinutes: 25 };
+		const timerSettings: TimerSettings = {
+			durationInMinutes: 25,
+			environment: 'test'
+		};
 		timer = new Timer(timerSettings);
 	});
 

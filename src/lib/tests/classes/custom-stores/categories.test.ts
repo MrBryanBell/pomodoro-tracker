@@ -2,7 +2,7 @@ import { get } from 'svelte/store';
 
 import { Category } from '$classes/category';
 import { CategoriesStore } from '$classes/custom-stores/categories-store';
-import type { CreateCategoryProps } from '$models/category';
+import type { CategoryFromSupabase } from '$models/category';
 
 let categories: CategoriesStore;
 
@@ -29,7 +29,11 @@ it('should return all categories', () => {
 });
 
 describe('...', () => {
-	const newCategoryProps: CreateCategoryProps = {
+	const newCategoryProps: CategoryFromSupabase = {
+		id: '1',
+		createdAt: '2023-01-05T03:42:46.458-06:00',
+		updatedAt: '2023-01-05T03:42:46.458-06:00',
+		userId: '1',
 		name: 'Crear configuración personalizada Eslint'
 	};
 	beforeEach(() => {

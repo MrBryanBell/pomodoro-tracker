@@ -3,16 +3,8 @@ import { get } from 'svelte/store';
 import { TasksStore } from '$classes/custom-stores/tasks-store';
 import { Task } from '$classes/task';
 import type { TaskFromSupabase } from '$models/task';
-import { categoriesStore as categories } from '$store/categories';
 
 let tasks: TasksStore;
-categories.add({
-	id: 'abc',
-	name: 'Golang',
-	createdAt: new Date().toISOString(),
-	updatedAt: new Date().toISOString()
-});
-
 beforeEach(() => {
 	tasks = new TasksStore();
 });
@@ -37,8 +29,15 @@ it('should return all tasks', () => {
 
 it('should add a task', () => {
 	const newTaskProps: TaskFromSupabase = {
-		name: 'Crear una API Rest de libros',
-		categoryId: 'abc'
+		categoryId: {
+			id: '1',
+			name: 'Test Category'
+		},
+		name: 'Test Task',
+		id: '1',
+		createdAt: '2023-01-05T03:42:46.458-06:00',
+		updatedAt: '2023-01-05T03:42:46.458-06:00',
+		userId: '1'
 	};
 
 	tasks.add(newTaskProps);
