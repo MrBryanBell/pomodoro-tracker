@@ -1,6 +1,14 @@
 import type { Options as NotificationOptions } from '@tauri-apps/api/notification';
 
-const presetNames = ['work-session-started', 'work-session-finished'] as const;
+// In case you want to add more presets:
+// 1. Add a new string to the presetNames array
+// 2. Add a new object to the presets array
+
+const presetNames = [
+	'work-session-started',
+	'work-session-finished',
+	'error:please-select-a-task'
+] as const;
 export type PresetName = (typeof presetNames)[number];
 
 type NotificationPreset = NotificationOptions & {
@@ -17,6 +25,11 @@ const presets: NotificationPreset[] = [
 		name: 'work-session-finished',
 		title: 'Sesión de trabajo finalizada',
 		body: '¡Bien hecho!'
+	},
+	{
+		name: 'error:please-select-a-task',
+		title: 'ERROR',
+		body: 'Por favor selecciona una tarea para iniciar una sesión de trabajo'
 	}
 ];
 

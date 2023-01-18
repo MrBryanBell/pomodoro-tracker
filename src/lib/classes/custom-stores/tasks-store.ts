@@ -55,9 +55,6 @@ export class TasksStore {
 
 	get current() {
 		const currentTask = get(this).current;
-		if (!currentTask) {
-			throw new Error('No current task');
-		}
 
 		return currentTask;
 	}

@@ -28,7 +28,7 @@ export interface Database {
 			};
 			'frequent-tasks': {
 				Row: {
-					categoryId: string;
+					categoryId: string | null;
 					createdAt: string;
 					id: string;
 					name: string;
@@ -36,7 +36,7 @@ export interface Database {
 					userId: string;
 				};
 				Insert: {
-					categoryId: string;
+					categoryId?: string | null;
 					createdAt?: string;
 					id?: string;
 					name: string;
@@ -44,7 +44,7 @@ export interface Database {
 					userId?: string;
 				};
 				Update: {
-					categoryId?: string;
+					categoryId?: string | null;
 					createdAt?: string;
 					id?: string;
 					name?: string;
@@ -74,35 +74,35 @@ export interface Database {
 			};
 			'work-sessions': {
 				Row: {
-					categoryId: string;
+					categoryId: string | null;
 					createdAt: string;
 					durationInMinutes: number;
 					endTimeInISO: string;
 					id: string;
 					startedTimeInISO: string;
-					taskId: string;
+					taskId: string | null;
 					updatedAt: string;
 					userId: string;
 				};
 				Insert: {
-					categoryId: string;
+					categoryId?: string | null;
 					createdAt?: string;
 					durationInMinutes: number;
 					endTimeInISO: string;
 					id?: string;
 					startedTimeInISO: string;
-					taskId: string;
+					taskId?: string | null;
 					updatedAt?: string;
 					userId?: string;
 				};
 				Update: {
-					categoryId?: string;
+					categoryId?: string | null;
 					createdAt?: string;
 					durationInMinutes?: number;
 					endTimeInISO?: string;
 					id?: string;
 					startedTimeInISO?: string;
-					taskId?: string;
+					taskId?: string | null;
 					updatedAt?: string;
 					userId?: string;
 				};

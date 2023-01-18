@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { registerUser } from '$lib/utils/auth/register';
 
-	let email = 'bryanbellabc@gmail.com';
-	let password = 'Thacarter12';
+	let email = '';
+	let password = '';
 </script>
 
 <h1>Register New User</h1>

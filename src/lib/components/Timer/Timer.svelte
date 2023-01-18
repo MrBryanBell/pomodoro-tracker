@@ -2,6 +2,7 @@
 	import { timerStore as timer } from '$store/timer';
 	import { Button, CountDown, EndTime, Name } from './tokens';
 	import { tasksStore as tasks } from '$store/tasks';
+	import { startTimer } from '$services/timer/start';
 
 	const timeLeftInMinutes = timer.timeLeftInMinutes$;
 	const formattedEndTime = timer.formattedEndTime$;
@@ -18,7 +19,7 @@
 	<section class="cta-wrapper">
 		<Button secondary on:click={() => timer.restart()}>reiniciar</Button>
 		{#if $isPaused}
-			<Button primary on:click={() => timer.start()}>iniciar</Button>
+			<Button primary on:click={startTimer}>iniciar</Button>
 		{:else}
 			<Button primary on:click={() => timer.pause()}>pausar</Button>
 		{/if}

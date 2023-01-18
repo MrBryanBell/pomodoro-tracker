@@ -6,6 +6,8 @@ import { type TimerSettings, TimerStore } from '$lib/classes/custom-stores/timer
 import { createWorkSession } from '$services/memory/work-sessions';
 import { tasksStore } from '$store/tasks';
 
+// TODO: Document this pattern
+// It's really useful 
 const timerSettings: TimerSettings = {
 	durationInMinutes: 25,
 	environment: 'production',
@@ -19,13 +21,16 @@ function handleTimerStart() {
 
 function handleTimerFinish(timer: TimerState) {
 	// TODO: Timer state should provide current task
+	// It should have a property for current-task
+	// At the end of the day, when you set the current-task, you are setting that property for the timer
+
 	void Notification.send({ preset: 'work-session-started' });
 	void createWorkSession({
 		startedTimeInISO: timer.startedTime.toISO(),
 		endTimeInISO: DateTime.now().toISO(),
 		durationInMinutes: timer.durationInMinutes,
-		taskId: tasksStore.current.id,
-		categoryId: tasksStore.current.category.id
+		taskId: tasksStore.current?.id,
+		categoryId: tasksStore.current?.category.id
 	});
 }
 

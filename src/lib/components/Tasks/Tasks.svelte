@@ -12,9 +12,12 @@
 {#each $allTasks as { id, name, category }}
 	<div class="task-wrapper">
 		<b>id: {id}, tarea: {name}</b>
-		<p>categoría: {category.name}</p>
+		<!-- TODO: Add validation in case category is null or undefined -->
+		<p>categoría: {category?.name}</p>
 		<button on:click={() => deleteTask(id)}>Delete</button>
 	</div>
+{:else}
+	<p>No hay tareas</p>
 {/each}
 
 <h3>Agregar una nueva Tarea</h3>

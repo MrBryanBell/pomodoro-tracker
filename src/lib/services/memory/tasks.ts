@@ -11,8 +11,9 @@ export async function createTask(taskProps: CreateTaskProps) {
 }
 
 export async function deleteTask(id: string) {
-	const { status } = await TasksHTTPService.delete(id);
+	const { status, error } = await TasksHTTPService.delete(id);
 	if (status !== 200) {
+		console.error(error);
 		throw new Error('Could not delete task');
 	}
 	tasksStore.delete(id);
