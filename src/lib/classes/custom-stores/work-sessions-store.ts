@@ -1,6 +1,8 @@
+import { DateTime } from 'luxon';
 import { derived, get, writable } from 'svelte/store';
 
 import { WorkSession } from '$classes/work-session';
+import { isFromToday } from '$lib/utils/is-from-today';
 import type { WorkSessionsFromSupabase } from '$models/work-session';
 import { WorkSessionsHTTPService } from '$services/supabase/work-sessions';
 
@@ -59,12 +61,23 @@ export class WorkSessionsStore {
 		return derived(this, (workSessions) => workSessions);
 	}
 
+	// TODO: Variable "today" should come from clock
+	// import clock inside utils/is-from-today.ts and get today from there
 	get allFromToday$() {
-		return derived(this, (workSessions) => workSessions);
+		const today = DateTime.now();
+
+		return derived(this, (workSessions) => {
+			return workSessions.filter(({ createdAt }) =>
+				isFromToday({
+					today,
+					dateToCompare: createdAt
+				})
+			);
+		});
 	}
 
 	get totalTimeFromTodayInHours$() {
-		return derived(this, (workSessions) => {
+		return derived(this.allFromToday$, (workSessions) => {
 			const timeInMinutes = workSessions.reduce((acc, session) => {
 				return acc + session.durationInMinutes;
 			}, 0);

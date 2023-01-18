@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { get } from 'svelte/store';
 
 import { WorkSessionsStore } from '$classes/custom-stores/work-sessions-store';
@@ -22,7 +23,7 @@ beforeEach(() => {
 			name: 'Test Task'
 		},
 		userId: '1',
-		createdAt: '2023-01-05T03:42:46.458-06:00',
+		createdAt: DateTime.now().toISO(),
 		updatedAt: '2023-01-05T03:42:46.458-06:00',
 		id: '1'
 	};
@@ -89,7 +90,7 @@ it('should return a number', () => {
 
 it('should return a 50', () => {
 	const expectedTimeInMinutes = 50;
-	const expectedTimeInHours = Math.floor((expectedTimeInMinutes / 60) * 10) / 10;
+	const expectedTimeInHours = Math.floor((expectedTimeInMinutes / 60) * 10) / 10; //?
 
 	workSessions.add({ ...workSessionProps, durationInMinutes: 20 });
 	workSessions.add({ ...workSessionProps, durationInMinutes: 30 });

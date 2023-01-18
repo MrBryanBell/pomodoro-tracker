@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 import type { ICategory } from '$models/category';
 import type { ITask } from '$models/task';
 import type { WorkSessionsFromSupabase } from '$models/work-session';
@@ -9,7 +11,7 @@ export class WorkSession {
 	public durationInMinutes: number;
 	public task: Pick<ITask, 'id' | 'name'>;
 	public category: Pick<ICategory, 'id' | 'name'>;
-	public createdAt: string;
+	public createdAt: DateTime;
 	public updatedAt: string;
 
 	constructor({
@@ -23,7 +25,7 @@ export class WorkSession {
 		categoryId
 	}: WorkSessionsFromSupabase) {
 		this.id = id;
-		this.createdAt = createdAt;
+		this.createdAt = DateTime.fromISO(createdAt);
 		this.updatedAt = updatedAt;
 		this.task = taskId;
 		this.category = categoryId;

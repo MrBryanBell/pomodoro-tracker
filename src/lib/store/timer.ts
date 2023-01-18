@@ -7,7 +7,7 @@ import { createWorkSession } from '$services/memory/work-sessions';
 import { tasksStore } from '$store/tasks';
 
 const timerSettings: TimerSettings = {
-	durationInMinutes: 0.1,
+	durationInMinutes: 25,
 	environment: 'production',
 	onStart: handleTimerStart,
 	onFinish: handleTimerFinish
