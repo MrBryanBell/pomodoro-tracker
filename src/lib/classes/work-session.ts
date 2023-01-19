@@ -12,7 +12,7 @@ export class WorkSession {
 	public task: Pick<ITask, 'id' | 'name'>;
 	public category: Pick<ICategory, 'id' | 'name'>;
 	public createdAt: DateTime;
-	public updatedAt: string;
+	public updatedAt: DateTime;
 
 	constructor({
 		id,
@@ -25,8 +25,8 @@ export class WorkSession {
 		categoryId
 	}: WorkSessionsFromSupabase) {
 		this.id = id;
-		this.createdAt = DateTime.fromISO(createdAt);
-		this.updatedAt = updatedAt;
+		this.createdAt = DateTime.fromISO(createdAt, { zone: 'local' });
+		this.updatedAt = DateTime.fromISO(updatedAt, { zone: 'local' });
 		this.task = taskId;
 		this.category = categoryId;
 		this.startedTimeInISO = startedTimeInISO;

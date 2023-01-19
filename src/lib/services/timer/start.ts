@@ -9,4 +9,5 @@ export function startTimer() {
 		return;
 	}
 	timer.start();
+	void Notification.send({ preset: 'work-session-started' });
 }
